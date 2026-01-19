@@ -1,0 +1,115 @@
+{
+  "name": "charts",
+  "version": "1.0.0",
+  "description": "Manage Helm chart forks as git submodules with multi-context configuration support",
+  "repository": "https://github.com/MisterGrinvalds/charts",
+  "commands": {
+    "charts-status": {
+      "description": "Show overall repository status including forks, contexts, and values",
+      "file": "commands/charts-status.md",
+      "model": "haiku"
+    },
+    "charts-fork-add": {
+      "description": "Fork upstream repo and add as submodule",
+      "file": "commands/charts-fork-add.md",
+      "model": "sonnet",
+      "args": "<url>"
+    },
+    "charts-fork-list": {
+      "description": "List all tracked forks with sync status",
+      "file": "commands/charts-fork-list.md",
+      "model": "haiku"
+    },
+    "charts-fork-sync": {
+      "description": "Sync fork with upstream changes",
+      "file": "commands/charts-fork-sync.md",
+      "model": "sonnet",
+      "args": "<chart>"
+    },
+    "charts-fork-track": {
+      "description": "Initialize submodule tracking for a fork",
+      "file": "commands/charts-fork-track.md",
+      "model": "haiku",
+      "args": "[chart]"
+    },
+    "charts-context-create": {
+      "description": "Create a new deployment context",
+      "file": "commands/charts-context-create.md",
+      "model": "sonnet",
+      "args": "<name>"
+    },
+    "charts-context-list": {
+      "description": "List all deployment contexts",
+      "file": "commands/charts-context-list.md",
+      "model": "haiku"
+    },
+    "charts-values-create": {
+      "description": "Create values file for a chart and context",
+      "file": "commands/charts-values-create.md",
+      "model": "sonnet",
+      "args": "<chart> <context>"
+    },
+    "charts-values-diff": {
+      "description": "Compare values between two contexts",
+      "file": "commands/charts-values-diff.md",
+      "model": "sonnet",
+      "args": "<chart> <context1> <context2>"
+    },
+    "charts-values-validate": {
+      "description": "Validate values against chart schema",
+      "file": "commands/charts-values-validate.md",
+      "model": "sonnet",
+      "args": "<chart>"
+    },
+    "charts-docs-generate": {
+      "description": "Generate comprehensive documentation for a chart",
+      "file": "commands/charts-docs-generate.md",
+      "model": "sonnet",
+      "args": "<chart>"
+    },
+    "charts-docs-validate": {
+      "description": "Validate chart documentation completeness",
+      "file": "commands/charts-docs-validate.md",
+      "model": "haiku",
+      "args": "<chart>"
+    }
+  },
+  "agents": {
+    "fork-analyzer": {
+      "description": "Analyze fork divergence, conflicts, and upgrade paths",
+      "file": "agents/fork-analyzer.md",
+      "model": "sonnet",
+      "color": "yellow"
+    },
+    "config-reviewer": {
+      "description": "Review values for security and best practices",
+      "file": "agents/config-reviewer.md",
+      "model": "opus",
+      "color": "green"
+    },
+    "upstream-tracker": {
+      "description": "Monitor upstream for updates and security patches",
+      "file": "agents/upstream-tracker.md",
+      "model": "sonnet",
+      "color": "blue"
+    },
+    "docs-generator": {
+      "description": "Generate comprehensive documentation for forked charts",
+      "file": "agents/docs-generator.md",
+      "model": "sonnet",
+      "color": "cyan"
+    }
+  },
+  "skills": {
+    "helm-best-practices": {
+      "description": "Helm chart configuration best practices and security",
+      "path": "skills/helm-best-practices",
+      "triggers": ["helm values", "chart config", "helm security"]
+    },
+    "git-submodule-patterns": {
+      "description": "Git submodule management and fork synchronization patterns",
+      "path": "skills/git-submodule-patterns",
+      "triggers": ["submodule", "fork management", "upstream sync"]
+    }
+  }
+}

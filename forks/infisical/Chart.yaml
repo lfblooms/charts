@@ -1,0 +1,30 @@
+apiVersion: v2
+name: infisical
+description: Infisical - Open source secret management platform
+type: application
+version: 0.1.0
+appVersion: "0.151.0"
+
+keywords:
+  - secrets
+  - secret-management
+  - infisical
+  - security
+  - devops
+
+home: https://infisical.com
+sources:
+  - https://github.com/Infisical/infisical
+
+maintainers:
+  - name: MisterGrinvalds
+
+dependencies:
+  - name: postgresql
+    version: "15.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: "19.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
