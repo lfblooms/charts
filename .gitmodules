@@ -1,0 +1,3 @@
+[submodule "forks/infisical"]
+	path = forks/infisical
+	url = https://github.com/MisterGrinvalds/Infisical.infisical.git
