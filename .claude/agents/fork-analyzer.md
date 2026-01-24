@@ -10,6 +10,15 @@ This agent performs deep analysis of chart forks to help with:
 - Planning upgrade paths
 - Documenting local customizations
 
+## Repository Structure
+
+```
+forks/<repo>/                    # Git submodule (fork of upstream)
+├── helm-charts/                 # Helm charts location
+│   └── <chart-name>/            # Individual chart
+└── ...                          # Other repo contents
+```
+
 ## Capabilities
 
 ### Divergence Analysis
@@ -34,20 +43,19 @@ This agent performs deep analysis of chart forks to help with:
 ### 1. Gather Information
 ```bash
 # Get fork status
-cd forks/<chart>
-git fetch upstream
+git -C forks/<repo> fetch upstream
 
 # Commits behind
-git rev-list --count HEAD..upstream/main
+git -C forks/<repo> rev-list --count HEAD..upstream/main
 
 # Commits ahead (local customizations)
-git rev-list --count upstream/main..HEAD
+git -C forks/<repo> rev-list --count upstream/main..HEAD
 
 # Modified files
-git diff --name-only upstream/main
+git -C forks/<repo> diff --name-only upstream/main
 
 # Detailed diff stats
-git diff --stat upstream/main
+git -C forks/<repo> diff --stat upstream/main
 ```
 
 ### 2. Categorize Changes
@@ -65,7 +73,7 @@ Group changes by type:
 Check for overlapping modifications:
 ```bash
 # Files modified in both local and upstream
-git diff --name-only HEAD...upstream/main
+git -C forks/<repo> diff --name-only HEAD...upstream/main
 ```
 
 ### 4. Generate Report
@@ -75,16 +83,19 @@ git diff --name-only HEAD...upstream/main
 ### Fork Analysis Report
 
 ```
-Fork Analysis: cert-manager
+Fork Analysis: infisical
 ═══════════════════════════════════════════════════════════════
 
-Upstream: https://github.com/cert-manager/cert-manager
-Fork:     https://github.com/MisterGrinvalds/cert-manager
-Branch:   main
+Repository: forks/infisical
+  Origin:   https://github.com/MisterGrinvalds/Infisical.infisical
+  Upstream: https://github.com/Infisical/infisical
+  Branch:   main
+
+Helm Charts:
+  - helm-charts/infisical-standalone-postgres (v0.8.0)
+  - helm-charts/infisical-gateway (v0.2.0)
 
 Divergence Summary:
-  Upstream version: v1.14.0
-  Fork version:     v1.13.0 + 5 local commits
   Commits behind:   47
   Commits ahead:    5
 
@@ -93,57 +104,32 @@ LOCAL CUSTOMIZATIONS (5 commits)
 ───────────────────────────────────────────────────────────────
 
 1. abc1234 - Add custom resource limits for local dev
-   Files: values.yaml
+   Files: helm-charts/infisical-standalone-postgres/values.yaml
 
 2. def5678 - Add prometheus servicemonitor
-   Files: templates/servicemonitor.yaml (new)
-
-3. ghi9012 - Customize webhook configuration
-   Files: templates/webhook-deployment.yaml
-
-4. jkl3456 - Add node selector for arm64
-   Files: values.yaml, templates/_helpers.tpl
-
-5. mno7890 - Update default replicas
-   Files: values.yaml
+   Files: helm-charts/infisical-standalone-postgres/templates/servicemonitor.yaml (new)
 
 ───────────────────────────────────────────────────────────────
 UPSTREAM CHANGES (47 commits since fork)
 ───────────────────────────────────────────────────────────────
 
 Breaking Changes:
-  - [BREAKING] Webhook now requires cert-manager.io/v1 API
-  - [BREAKING] Removed deprecated --leader-elect flag
+  - [BREAKING] Minimum Kubernetes version now 1.25
 
 Notable Updates:
   - Security fix: CVE-2024-xxxx patched
-  - New feature: ACME external account binding
-  - Performance: Reduced memory usage by 30%
-
-Modified Files:
-  templates/   15 files changed
-  values.yaml  1 file changed
-  Chart.yaml   1 file changed
+  - New feature: External secrets support
 
 ───────────────────────────────────────────────────────────────
 CONFLICT ANALYSIS
 ───────────────────────────────────────────────────────────────
 
 High Risk (likely conflicts):
-  - values.yaml
-    Local: Added custom resources section
-    Upstream: Restructured resources section
+  - helm-charts/infisical-standalone-postgres/values.yaml
     Recommendation: Manual merge required
 
-Medium Risk (review needed):
-  - templates/webhook-deployment.yaml
-    Local: Added custom annotations
-    Upstream: Updated container spec
-    Recommendation: May merge cleanly, verify result
-
 Low Risk (should merge cleanly):
-  - templates/servicemonitor.yaml
-    Local: New file (addition)
+  - helm-charts/infisical-standalone-postgres/templates/servicemonitor.yaml
     Recommendation: Will preserve local addition
 
 ───────────────────────────────────────────────────────────────
@@ -154,26 +140,21 @@ Recommended approach: Incremental merge
 
 Steps:
 1. Backup current fork state
-2. Merge upstream/main with --no-commit
-3. Resolve conflicts in values.yaml manually
-4. Test helm template output
-5. Run /charts-values-validate cert-manager
-6. Commit merge
-
-Estimated effort: Medium (1-2 conflicts to resolve)
-
-Alternative: Rebase (cleaner history, but rewrites local commits)
+2. git -C forks/<repo> merge upstream/main --no-commit
+3. Resolve conflicts manually
+4. Test: make <repo>-lint
+5. Commit merge
+6. Update parent repo: git add forks/<repo> && git commit
 ```
 
 ## Invocation Examples
 
-- "Analyze the cert-manager fork"
-- "What customizations do we have in ingress-nginx?"
+- "Analyze the infisical fork"
+- "What customizations do we have?"
 - "Can I safely merge upstream changes?"
-- "Plan an upgrade from v1.13 to v1.14"
+- "Plan an upgrade path"
 
 ## Related Commands
 
-- `/charts-fork-sync <chart>` - Execute the sync after analysis
+- `/charts-fork-sync <repo>` - Execute the sync after analysis
 - `/charts-fork-list` - See all forks and their status
-- `/charts-values-validate <chart>` - Validate after merge

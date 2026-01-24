@@ -6,70 +6,70 @@
   "commands": {
     "charts-status": {
       "description": "Show overall repository status including forks, contexts, and values",
-      "file": "commands/charts-status.md",
+      "file": ".claude/commands/charts-status.md",
       "model": "haiku"
     },
     "charts-fork-add": {
       "description": "Fork upstream repo and add as submodule",
-      "file": "commands/charts-fork-add.md",
+      "file": ".claude/commands/charts-fork-add.md",
       "model": "sonnet",
-      "args": "<url>"
+      "args": "<upstream-url>"
     },
     "charts-fork-list": {
       "description": "List all tracked forks with sync status",
-      "file": "commands/charts-fork-list.md",
+      "file": ".claude/commands/charts-fork-list.md",
       "model": "haiku"
     },
     "charts-fork-sync": {
       "description": "Sync fork with upstream changes",
-      "file": "commands/charts-fork-sync.md",
+      "file": ".claude/commands/charts-fork-sync.md",
       "model": "sonnet",
-      "args": "<chart>"
+      "args": "<repo>"
     },
     "charts-fork-track": {
       "description": "Initialize submodule tracking for a fork",
-      "file": "commands/charts-fork-track.md",
+      "file": ".claude/commands/charts-fork-track.md",
       "model": "haiku",
-      "args": "[chart]"
+      "args": "[repo]"
     },
     "charts-context-create": {
       "description": "Create a new deployment context",
-      "file": "commands/charts-context-create.md",
+      "file": ".claude/commands/charts-context-create.md",
       "model": "sonnet",
       "args": "<name>"
     },
     "charts-context-list": {
       "description": "List all deployment contexts",
-      "file": "commands/charts-context-list.md",
+      "file": ".claude/commands/charts-context-list.md",
       "model": "haiku"
     },
     "charts-values-create": {
       "description": "Create values file for a chart and context",
-      "file": "commands/charts-values-create.md",
+      "file": ".claude/commands/charts-values-create.md",
       "model": "sonnet",
       "args": "<chart> <context>"
     },
     "charts-values-diff": {
       "description": "Compare values between two contexts",
-      "file": "commands/charts-values-diff.md",
+      "file": ".claude/commands/charts-values-diff.md",
       "model": "sonnet",
       "args": "<chart> <context1> <context2>"
     },
     "charts-values-validate": {
       "description": "Validate values against chart schema",
-      "file": "commands/charts-values-validate.md",
+      "file": ".claude/commands/charts-values-validate.md",
       "model": "sonnet",
       "args": "<chart>"
     },
     "charts-docs-generate": {
       "description": "Generate comprehensive documentation for a chart",
-      "file": "commands/charts-docs-generate.md",
+      "file": ".claude/commands/charts-docs-generate.md",
       "model": "sonnet",
       "args": "<chart>"
     },
     "charts-docs-validate": {
       "description": "Validate chart documentation completeness",
-      "file": "commands/charts-docs-validate.md",
+      "file": ".claude/commands/charts-docs-validate.md",
       "model": "haiku",
       "args": "<chart>"
     }
@@ -77,25 +77,25 @@
   "agents": {
     "fork-analyzer": {
       "description": "Analyze fork divergence, conflicts, and upgrade paths",
-      "file": "agents/fork-analyzer.md",
+      "file": ".claude/agents/fork-analyzer.md",
       "model": "sonnet",
       "color": "yellow"
     },
     "config-reviewer": {
       "description": "Review values for security and best practices",
-      "file": "agents/config-reviewer.md",
+      "file": ".claude/agents/config-reviewer.md",
       "model": "opus",
       "color": "green"
     },
     "upstream-tracker": {
       "description": "Monitor upstream for updates and security patches",
-      "file": "agents/upstream-tracker.md",
+      "file": ".claude/agents/upstream-tracker.md",
       "model": "sonnet",
       "color": "blue"
     },
     "docs-generator": {
       "description": "Generate comprehensive documentation for forked charts",
-      "file": "agents/docs-generator.md",
+      "file": ".claude/agents/docs-generator.md",
       "model": "sonnet",
       "color": "cyan"
     }
