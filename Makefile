@@ -37,8 +37,11 @@ help: ## Show this help
 	@echo "Infisical:"
 	@grep -hE '^infisical[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
 	@echo ""
+	@echo "Tailscale:"
+	@grep -hE '^tailscale[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
+	@echo ""
 	@echo "Utilities:"
-	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep -vE '(cluster|kind|install-all|uninstall-all|status-all|infisical)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
+	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep -vE '(cluster|kind|install-all|uninstall-all|status-all|infisical|tailscale)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 
 # =============================================================================

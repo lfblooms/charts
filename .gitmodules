@@ -1,3 +1,6 @@
 [submodule "forks/infisical"]
 	path = forks/infisical
 	url = https://github.com/MisterGrinvalds/Infisical.infisical.git
+[submodule "forks/tailscale"]
+	path = forks/tailscale
+	url = https://github.com/MisterGrinvalds/tailscale.tailscale.git
