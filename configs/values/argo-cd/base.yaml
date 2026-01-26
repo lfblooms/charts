@@ -1,0 +1,32 @@
+# ArgoCD Base Values
+# Fork: MisterGrinvalds/argoproj.argo-helm
+# Chart: charts/argo-cd
+
+# Server configuration
+server:
+  # Enable insecure mode for local development (disable TLS)
+  # insecure: true
+
+  # Service type for server
+  service:
+    type: ClusterIP
+
+# Repo server configuration
+repoServer:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Controller configuration
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

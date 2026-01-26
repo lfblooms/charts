@@ -1,0 +1,13 @@
+# Kyverno Policies Base Values
+# Fork: MisterGrinvalds/kyverno.kyverno
+# Chart: charts/kyverno-policies
+
+# Pod Security Standards
+podSecurityStandard: baseline
+
+# Policy validation failure action
+validationFailureAction: audit
+
+# Include/exclude specific policies
+# include: []
+# exclude: []

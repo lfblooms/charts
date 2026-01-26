@@ -1,0 +1,32 @@
+# Grafana Base Values
+# Fork: MisterGrinvalds/grafana.helm-charts
+# Chart: charts/grafana
+
+# Admin credentials (use external secrets in production)
+adminUser: admin
+# adminPassword: set via secret
+
+# Persistence
+persistence:
+  enabled: false
+
+# Service
+service:
+  type: ClusterIP
+  port: 80
+
+# Resources
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Sidecar for dashboards and datasources
+sidecar:
+  dashboards:
+    enabled: true
+  datasources:
+    enabled: true

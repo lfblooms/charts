@@ -1,0 +1,27 @@
+# Kiali Operator Base Values
+# Fork: MisterGrinvalds/kiali.helm-charts
+# Chart: kiali-operator
+
+# CR configuration for Kiali server
+cr:
+  create: true
+  namespace: istio-system
+  spec:
+    auth:
+      strategy: anonymous
+    deployment:
+      accessible_namespaces:
+        - "**"
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+    external_services:
+      prometheus:
+        url: http://prometheus-server.monitoring:80
+      grafana:
+        enabled: true
+        url: http://grafana.monitoring:80

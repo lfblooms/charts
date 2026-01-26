@@ -1,0 +1,20 @@
+# Mimir Distributed Base Values
+# Fork: MisterGrinvalds/grafana.helm-charts
+# Chart: charts/mimir-distributed
+
+# Mimir configuration
+mimir:
+  structuredConfig:
+    common:
+      storage:
+        backend: filesystem
+        filesystem:
+          dir: /data/mimir
+
+# Global settings
+global:
+  extraEnvFrom: []
+
+# Disable minio (use external or local storage)
+minio:
+  enabled: false

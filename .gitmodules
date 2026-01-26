@@ -4,3 +4,51 @@
 [submodule "forks/tailscale"]
 	path = forks/tailscale
 	url = https://github.com/MisterGrinvalds/tailscale.tailscale.git
+[submodule "forks/argo-helm"]
+	path = forks/argo-helm
+	url = https://github.com/MisterGrinvalds/argoproj.argo-helm.git
+[submodule "forks/cert-manager"]
+	path = forks/cert-manager
+	url = https://github.com/MisterGrinvalds/cert-manager.cert-manager.git
+[submodule "forks/external-dns"]
+	path = forks/external-dns
+	url = https://github.com/MisterGrinvalds/kubernetes-sigs.external-dns.git
+[submodule "forks/external-secrets"]
+	path = forks/external-secrets
+	url = https://github.com/MisterGrinvalds/external-secrets.external-secrets.git
+[submodule "forks/grafana-helm-charts"]
+	path = forks/grafana-helm-charts
+	url = https://github.com/MisterGrinvalds/grafana.helm-charts.git
+[submodule "forks/ingress-nginx"]
+	path = forks/ingress-nginx
+	url = https://github.com/MisterGrinvalds/kubernetes.ingress-nginx.git
+[submodule "forks/istio"]
+	path = forks/istio
+	url = https://github.com/MisterGrinvalds/istio.istio.git
+[submodule "forks/bitnami-charts"]
+	path = forks/bitnami-charts
+	url = https://github.com/MisterGrinvalds/bitnami.charts.git
+[submodule "forks/kyverno"]
+	path = forks/kyverno
+	url = https://github.com/MisterGrinvalds/kyverno.kyverno.git
+[submodule "forks/prometheus-helm-charts"]
+	path = forks/prometheus-helm-charts
+	url = https://github.com/MisterGrinvalds/prometheus-community.helm-charts.git
+[submodule "forks/harbor-helm"]
+	path = forks/harbor-helm
+	url = https://github.com/MisterGrinvalds/goharbor.harbor-helm.git
+[submodule "forks/kiali-helm-charts"]
+	path = forks/kiali-helm-charts
+	url = https://github.com/MisterGrinvalds/kiali.helm-charts.git
+[submodule "forks/policy-reporter"]
+	path = forks/policy-reporter
+	url = https://github.com/MisterGrinvalds/kyverno.policy-reporter.git
+[submodule "forks/minio"]
+	path = forks/minio
+	url = https://github.com/MisterGrinvalds/minio.minio.git
+[submodule "forks/vault-helm"]
+	path = forks/vault-helm
+	url = https://github.com/MisterGrinvalds/hashicorp.vault-helm.git
+[submodule "forks/vault-secrets-operator"]
+	path = forks/vault-secrets-operator
+	url = https://github.com/MisterGrinvalds/hashicorp.vault-secrets-operator.git

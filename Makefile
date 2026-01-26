@@ -18,6 +18,9 @@ YELLOW := \033[1;33m
 RED := \033[0;31m
 NC := \033[0m
 
+# Context configuration (local, cloud-prod, etc.)
+CONTEXT ?= local
+
 # =============================================================================
 # HELP
 # =============================================================================
@@ -28,21 +31,59 @@ help: ## Show this help
 	@echo "Charts Repository - Helm Chart Management"
 	@echo "=========================================="
 	@echo ""
-	@echo "Cluster Management:"
-	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(cluster|kind)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
+	@echo "Usage: make <target> [CONTEXT=<context>]"
+	@echo "Current context: $(CONTEXT)"
 	@echo ""
-	@echo "All Charts:"
-	@grep -hE '^(install-all|uninstall-all|status-all):.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
+	@echo "$(YELLOW)Cluster Management:$(NC)"
+	@grep -hE '^(cluster|kind)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "Infisical:"
-	@grep -hE '^infisical[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
+	@echo "$(YELLOW)GitOps & CD:$(NC)"
+	@grep -hE '^argocd[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | head -6 | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "Tailscale:"
-	@grep -hE '^tailscale[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
+	@echo "$(YELLOW)Secrets Management:$(NC)"
+	@grep -hE '^(external-secrets|vault|infisical)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "Utilities:"
-	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep -vE '(cluster|kind|install-all|uninstall-all|status-all|infisical|tailscale)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-25s$(NC) %s\n", $$1, $$2}'
+	@echo "$(YELLOW)Networking:$(NC)"
+	@grep -hE '^(ingress-nginx|istio|external-dns)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
+	@echo "$(YELLOW)Observability:$(NC)"
+	@grep -hE '^(grafana|loki|tempo|mimir|prometheus|kube-prometheus-stack)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "$(YELLOW)Security & Policy:$(NC)"
+	@grep -hE '^(cert-manager|kyverno|policy-reporter|kiali)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "$(YELLOW)Identity & Access:$(NC)"
+	@grep -hE '^keycloak[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "$(YELLOW)Storage & Registry:$(NC)"
+	@grep -hE '^(harbor|minio)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "$(YELLOW)Network Management:$(NC)"
+	@grep -hE '^tailscale[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "Run 'make help-<chart>' for detailed targets (e.g., make help-argocd)"
+	@echo ""
+
+# Chart-specific help targets
+.PHONY: help-argocd
+help-argocd: ## Show ArgoCD targets
+	@echo "$(YELLOW)ArgoCD Targets:$(NC)"
+	@grep -hE '^argocd[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+
+.PHONY: help-istio
+help-istio: ## Show Istio targets
+	@echo "$(YELLOW)Istio Targets:$(NC)"
+	@grep -hE '^(istio|istiod)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+
+.PHONY: help-observability
+help-observability: ## Show observability targets (Grafana, Loki, Tempo, Mimir, Prometheus)
+	@echo "$(YELLOW)Observability Targets:$(NC)"
+	@grep -hE '^(grafana|loki|tempo|mimir|prometheus|kube-prometheus-stack|observability)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+
+.PHONY: help-vault
+help-vault: ## Show Vault targets
+	@echo "$(YELLOW)Vault Targets:$(NC)"
+	@grep -hE '^vault[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 
 # =============================================================================
 # CLUSTER MANAGEMENT

@@ -1,0 +1,19 @@
+# cert-manager Base Values
+# Fork: MisterGrinvalds/cert-manager.cert-manager
+# Chart: deploy/charts/cert-manager
+
+# Install CRDs with the chart
+installCRDs: true
+
+# Webhook configuration
+webhook:
+  timeoutSeconds: 10
+
+# Resources
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
