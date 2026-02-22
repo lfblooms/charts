@@ -74,6 +74,12 @@ help: ## Show this help
 	@echo "$(YELLOW)Network Management:$(NC)"
 	@grep -hE '^tailscale[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
+	@echo "$(YELLOW)Applications:$(NC)"
+	@grep -hE '^nextcloud[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "$(YELLOW)Configuration Management:$(NC)"
+	@grep -hE '^reloader[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
 	@echo "$(YELLOW)OCI Registry & Publishing:$(NC)"
 	@grep -hE '^registry-[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@grep -hE '^(package-all|push-all)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
@@ -213,7 +219,9 @@ PACKAGE_ALL_TARGETS := \
 	policy-reporter-package \
 	minio-package \
 	vault-package \
-	vault-secrets-operator-package
+	vault-secrets-operator-package \
+	nextcloud-package \
+	reloader-package
 
 # All push targets
 PUSH_ALL_TARGETS := $(PACKAGE_ALL_TARGETS:%-package=%-push)

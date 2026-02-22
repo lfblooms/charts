@@ -52,3 +52,9 @@
 [submodule "forks/vault-secrets-operator"]
 	path = forks/vault-secrets-operator
 	url = https://github.com/lfblooms/hashicorp.vault-secrets-operator.git
+[submodule "forks/nextcloud-helm"]
+	path = forks/nextcloud-helm
+	url = https://github.com/lfblooms/nextcloud.helm.git
+[submodule "forks/reloader"]
+	path = forks/reloader
+	url = https://github.com/lfblooms/stakater.Reloader.git

@@ -1,0 +1,78 @@
+# Nextcloud Base Values
+# Fork: lfblooms/nextcloud.helm
+# Chart: charts/nextcloud
+
+# Image
+image:
+  repository: nextcloud
+  flavor: apache
+  pullPolicy: IfNotPresent
+
+# Replicas
+replicaCount: 1
+
+# Ingress
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 4G
+  # className: nginx
+
+# Nextcloud configuration
+nextcloud:
+  host: nextcloud.local
+  # existingSecret:
+  #   enabled: true
+  #   secretName: nextcloud-credentials
+  #   usernameKey: username
+  #   passwordKey: password
+
+# Persistence
+persistence:
+  enabled: true
+  size: 10Gi
+
+# Resources
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+# Liveness and readiness probes
+livenessProbe:
+  enabled: true
+  periodSeconds: 30
+  timeoutSeconds: 10
+
+readinessProbe:
+  enabled: true
+  periodSeconds: 15
+  timeoutSeconds: 10
+
+# Internal database (SQLite) - override per context for PostgreSQL/MySQL
+internalDatabase:
+  enabled: false
+
+# PostgreSQL subchart
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        database: nextcloud
+        username: nextcloud
+        # existingSecret: nextcloud-db-credentials
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+
+# Redis subchart
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  architecture: standalone
