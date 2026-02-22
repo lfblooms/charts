@@ -59,8 +59,14 @@ upstreams:
     versions: ["0.9.1"]
 
   # ============================================================================
-  # NETWORKING
+  # CNI / NETWORKING
   # ============================================================================
+
+  cilium:
+    type: repo
+    repo: https://helm.cilium.io
+    chart: cilium
+    versions: ["1.18.7"]
 
   ingress-nginx:
     type: repo

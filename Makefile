@@ -53,8 +53,8 @@ help: ## Show this help
 	@echo "$(YELLOW)Secrets Management:$(NC)"
 	@grep -hE '^(external-secrets|vault|infisical)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "$(YELLOW)Networking:$(NC)"
-	@grep -hE '^(ingress-nginx|istio|external-dns)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo "$(YELLOW)Networking & CNI:$(NC)"
+	@grep -hE '^(cilium|ingress-nginx|istio|external-dns)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$(YELLOW)Observability:$(NC)"
 	@grep -hE '^(grafana|loki|tempo|mimir|prometheus|kube-prometheus-stack)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
@@ -203,6 +203,7 @@ PACKAGE_ALL_TARGETS := \
 	tailscale-package \
 	argocd-package \
 	cert-manager-package \
+	cilium-package \
 	external-dns-package \
 	external-secrets-package \
 	grafana-package loki-package tempo-package mimir-package \

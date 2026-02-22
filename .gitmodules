@@ -58,3 +58,6 @@
 [submodule "forks/reloader"]
 	path = forks/reloader
 	url = https://github.com/lfblooms/stakater.Reloader.git
+[submodule "forks/cilium"]
+	path = forks/cilium
+	url = https://github.com/lfblooms/cilium.cilium.git
