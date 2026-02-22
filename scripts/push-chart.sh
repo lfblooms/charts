@@ -64,6 +64,14 @@ list_registries() {
 	yq '.registries | keys | .[]' "$REGISTRIES_FILE"
 }
 
+# Read charts-prefix from registries.yaml (empty string if not set).
+# Args: $1=registry name
+registry_charts_prefix() {
+	local val
+	val=$(yq ".registries.$1.\"charts-prefix\" // \"\"" "$REGISTRIES_FILE")
+	echo "$val"
+}
+
 # Package a chart, output the .tgz path
 # Args: $1=chart path
 package_chart() {
@@ -108,6 +116,14 @@ push_to_registry() {
 		exit 1
 	fi
 
+	# Resolve charts prefix (e.g., "charts" → url/charts/<chart>)
+	local charts_prefix
+	charts_prefix=$(registry_charts_prefix "$reg_name")
+	local oci_target="$reg_url"
+	if [[ -n "$charts_prefix" ]]; then
+		oci_target="$reg_url/$charts_prefix"
+	fi
+
 	local push_args=()
 	if [[ "$reg_plain_http" == "true" ]]; then
 		push_args+=(--plain-http)
@@ -116,11 +132,11 @@ push_to_registry() {
 	local chart_name
 	chart_name=$(basename "$pkg_path" | sed 's/-[0-9].*$//')
 
-	echo -e "${GREEN}Pushing $chart_name to oci://$reg_url ...${NC}"
+	echo -e "${GREEN}Pushing $chart_name to oci://$oci_target ...${NC}"
 
-	helm push "$pkg_path" "oci://$reg_url" "${push_args[@]}"
+	helm push "$pkg_path" "oci://$oci_target" "${push_args[@]}"
 
-	echo -e "${GREEN}Published: oci://$reg_url/$chart_name${NC}"
+	echo -e "${GREEN}Published: oci://$oci_target/$chart_name${NC}"
 }
 
 # Main
