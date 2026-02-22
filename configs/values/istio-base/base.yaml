@@ -1,9 +1,0 @@
-# Istio Base Values
-# Fork: lfblooms/istio.istio
-# Chart: manifests/charts/base
-
-# Default profile
-defaultRevision: default
-
-# Enable validation webhook
-enableIstioConfigCRDs: true
