@@ -262,36 +262,36 @@ istio-push-all: istio-base-push istiod-push istio-cni-push istio-ingress-push ##
 # =============================================================================
 
 .PHONY: istio-base-mirror
-istio-base-mirror: ## Mirror Istio base chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart base $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+istio-base-mirror: ## Mirror Istio base chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart base $(if $(VERSION),--version $(VERSION))
 
 .PHONY: istio-base-images
 istio-base-images: ## List container images in Istio base chart
-	@$(EXTRACT_IMAGES) $(ISTIO_BASE_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart base --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: istiod-mirror
-istiod-mirror: ## Mirror Istiod chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart istiod $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+istiod-mirror: ## Mirror Istiod chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart istiod $(if $(VERSION),--version $(VERSION))
 
 .PHONY: istiod-images
 istiod-images: ## List container images in Istiod chart
-	@$(EXTRACT_IMAGES) $(ISTIOD_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart istiod --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: istio-cni-mirror
-istio-cni-mirror: ## Mirror Istio CNI chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart cni $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+istio-cni-mirror: ## Mirror Istio CNI chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart cni $(if $(VERSION),--version $(VERSION))
 
 .PHONY: istio-cni-images
 istio-cni-images: ## List container images in Istio CNI chart
-	@$(EXTRACT_IMAGES) $(ISTIO_CNI_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart cni --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: istio-ingress-mirror
-istio-ingress-mirror: ## Mirror Istio ingress gateway chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart gateway $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+istio-ingress-mirror: ## Mirror Istio ingress gateway chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart gateway $(if $(VERSION),--version $(VERSION))
 
 .PHONY: istio-ingress-images
 istio-ingress-images: ## List container images in Istio ingress gateway chart
-	@$(EXTRACT_IMAGES) $(ISTIO_INGRESS_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart gateway --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: istio-mirror-all
 istio-mirror-all: istio-base-mirror istiod-mirror istio-cni-mirror istio-ingress-mirror ## Mirror all Istio charts

@@ -91,9 +91,9 @@ policy-reporter-push: ## Push Policy Reporter chart to OCI registry (REGISTRY=lo
 # =============================================================================
 
 .PHONY: policy-reporter-mirror
-policy-reporter-mirror: ## Mirror Policy Reporter chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart policy-reporter $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+policy-reporter-mirror: ## Mirror Policy Reporter chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart policy-reporter $(if $(VERSION),--version $(VERSION))
 
 .PHONY: policy-reporter-images
 policy-reporter-images: ## List container images in Policy Reporter chart
-	@$(EXTRACT_IMAGES) $(POLICYREPORTER_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart policy-reporter --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

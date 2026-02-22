@@ -95,9 +95,9 @@ external-secrets-push: ## Push external-secrets chart to OCI registry (REGISTRY=
 # =============================================================================
 
 .PHONY: external-secrets-mirror
-external-secrets-mirror: ## Mirror external-secrets chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart external-secrets $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+external-secrets-mirror: ## Mirror external-secrets chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart external-secrets $(if $(VERSION),--version $(VERSION))
 
 .PHONY: external-secrets-images
 external-secrets-images: ## List container images in external-secrets chart
-	@$(EXTRACT_IMAGES) $(EXTERNALSECRETS_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart external-secrets --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

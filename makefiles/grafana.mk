@@ -333,36 +333,36 @@ grafana-push-all: grafana-push loki-push tempo-push mimir-push ## Push all Grafa
 # =============================================================================
 
 .PHONY: grafana-mirror
-grafana-mirror: ## Mirror Grafana chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart grafana $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+grafana-mirror: ## Mirror Grafana chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart grafana $(if $(VERSION),--version $(VERSION))
 
 .PHONY: grafana-images
 grafana-images: ## List container images in Grafana chart
-	@$(EXTRACT_IMAGES) $(GRAFANA_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart grafana --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: loki-mirror
-loki-mirror: ## Mirror Loki chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart loki $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+loki-mirror: ## Mirror Loki chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart loki $(if $(VERSION),--version $(VERSION))
 
 .PHONY: loki-images
 loki-images: ## List container images in Loki chart
-	@$(EXTRACT_IMAGES) $(LOKI_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart loki --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: tempo-mirror
-tempo-mirror: ## Mirror Tempo chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart tempo $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+tempo-mirror: ## Mirror Tempo chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart tempo $(if $(VERSION),--version $(VERSION))
 
 .PHONY: tempo-images
 tempo-images: ## List container images in Tempo chart
-	@$(EXTRACT_IMAGES) $(TEMPO_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart tempo --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: mimir-mirror
-mimir-mirror: ## Mirror Mimir chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart mimir-distributed $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+mimir-mirror: ## Mirror Mimir chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart mimir-distributed $(if $(VERSION),--version $(VERSION))
 
 .PHONY: mimir-images
 mimir-images: ## List container images in Mimir chart
-	@$(EXTRACT_IMAGES) $(MIMIR_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart mimir-distributed --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: grafana-mirror-all
 grafana-mirror-all: grafana-mirror loki-mirror tempo-mirror mimir-mirror ## Mirror all Grafana stack charts

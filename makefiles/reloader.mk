@@ -86,9 +86,9 @@ reloader-push: ## Push Reloader chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: reloader-mirror
-reloader-mirror: ## Mirror Reloader chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart reloader $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+reloader-mirror: ## Mirror Reloader chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart reloader $(if $(VERSION),--version $(VERSION))
 
 .PHONY: reloader-images
 reloader-images: ## List container images in Reloader chart
-	@$(EXTRACT_IMAGES) $(RELOADER_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart reloader --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

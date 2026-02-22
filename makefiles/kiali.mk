@@ -94,9 +94,9 @@ kiali-push: ## Push Kiali operator chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: kiali-mirror
-kiali-mirror: ## Mirror Kiali chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart kiali-server $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+kiali-mirror: ## Mirror Kiali chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart kiali-server $(if $(VERSION),--version $(VERSION))
 
 .PHONY: kiali-images
 kiali-images: ## List container images in Kiali chart
-	@$(EXTRACT_IMAGES) $(KIALI_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart kiali-server --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

@@ -96,9 +96,9 @@ keycloak-push: ## Push Keycloak chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: keycloak-mirror
-keycloak-mirror: ## Mirror Keycloak chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart keycloak $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+keycloak-mirror: ## Mirror Keycloak chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart keycloak $(if $(VERSION),--version $(VERSION))
 
 .PHONY: keycloak-images
 keycloak-images: ## List container images in Keycloak chart
-	@$(EXTRACT_IMAGES) $(KEYCLOAK_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart keycloak --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

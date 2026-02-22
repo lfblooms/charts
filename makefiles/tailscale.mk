@@ -146,9 +146,9 @@ tailscale-push: ## Push tailscale chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: tailscale-mirror
-tailscale-mirror: ## Mirror Tailscale chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart tailscale-operator $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+tailscale-mirror: ## Mirror Tailscale chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart tailscale-operator $(if $(VERSION),--version $(VERSION))
 
 .PHONY: tailscale-images
 tailscale-images: ## List container images in Tailscale chart
-	@$(EXTRACT_IMAGES) $(TAILSCALE_CHART)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart tailscale-operator --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

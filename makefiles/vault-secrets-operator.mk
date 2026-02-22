@@ -86,9 +86,9 @@ vault-secrets-operator-push: ## Push Vault Secrets Operator chart to OCI registr
 # =============================================================================
 
 .PHONY: vault-secrets-operator-mirror
-vault-secrets-operator-mirror: ## Mirror Vault Secrets Operator chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart vault-secrets-operator $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+vault-secrets-operator-mirror: ## Mirror Vault Secrets Operator chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart vault-secrets-operator $(if $(VERSION),--version $(VERSION))
 
 .PHONY: vault-secrets-operator-images
 vault-secrets-operator-images: ## List container images in Vault Secrets Operator chart
-	@$(EXTRACT_IMAGES) $(VAULTSO_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart vault-secrets-operator --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

@@ -1,0 +1,217 @@
+# registry/mirror.yaml — Mirror configuration for lazyoci mirror
+#
+# Unified config that replaces the previous upstreams.yaml + mirror-versions.yaml
+# split. Defines upstream chart sources, version lists, and the target registry.
+#
+# Usage:
+#   lazyoci mirror --config registry/mirror.yaml --chart vault --dry-run
+#   lazyoci mirror --config registry/mirror.yaml --all
+#   lazyoci mirror --config registry/mirror.yaml --chart vault --version 0.29.0
+#   lazyoci mirror --config registry/mirror.yaml --all -o json
+#
+# Or via Make:
+#   make vault-mirror
+#   make mirror-all
+
+target:
+  url: registry.digitalocean.com/greenforests
+  insecure: false
+  charts-prefix: charts
+
+upstreams:
+
+  # ============================================================================
+  # GITOPS & CD
+  # ============================================================================
+
+  argo-cd:
+    type: repo
+    repo: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    versions: ["7.6.8"]
+
+  # ============================================================================
+  # SECRETS MANAGEMENT
+  # ============================================================================
+
+  cert-manager:
+    type: repo
+    repo: https://charts.jetstack.io
+    chart: cert-manager
+    versions: ["v1.16.1"]
+
+  external-secrets:
+    type: repo
+    repo: https://charts.external-secrets.io
+    chart: external-secrets
+    versions: ["0.10.5"]
+
+  vault:
+    type: repo
+    repo: https://helm.releases.hashicorp.com
+    chart: vault
+    versions: ["0.28.0"]
+
+  vault-secrets-operator:
+    type: repo
+    repo: https://helm.releases.hashicorp.com
+    chart: vault-secrets-operator
+    versions: ["0.9.1"]
+
+  # ============================================================================
+  # NETWORKING
+  # ============================================================================
+
+  ingress-nginx:
+    type: repo
+    repo: https://kubernetes.github.io/ingress-nginx
+    chart: ingress-nginx
+    versions: ["4.11.2"]
+
+  external-dns:
+    type: repo
+    repo: https://kubernetes-sigs.github.io/external-dns/
+    chart: external-dns
+    versions: ["1.15.0"]
+
+  tailscale-operator:
+    type: repo
+    repo: https://pkgs.tailscale.com/helmcharts
+    chart: tailscale-operator
+    versions: ["1.82.0"]
+
+  # ============================================================================
+  # SERVICE MESH (ISTIO)
+  # ============================================================================
+
+  base:
+    type: repo
+    repo: https://istio-release.storage.googleapis.com/charts
+    chart: base
+    versions: ["1.23.4"]
+
+  istiod:
+    type: repo
+    repo: https://istio-release.storage.googleapis.com/charts
+    chart: istiod
+    versions: ["1.23.4"]
+
+  cni:
+    type: repo
+    repo: https://istio-release.storage.googleapis.com/charts
+    chart: cni
+    versions: ["1.23.4"]
+
+  gateway:
+    type: repo
+    repo: https://istio-release.storage.googleapis.com/charts
+    chart: gateway
+    versions: ["1.23.4"]
+
+  # ============================================================================
+  # OBSERVABILITY
+  # ============================================================================
+
+  grafana:
+    type: repo
+    repo: https://grafana.github.io/helm-charts
+    chart: grafana
+    versions: ["8.5.11"]
+
+  loki:
+    type: repo
+    repo: https://grafana.github.io/helm-charts
+    chart: loki
+    versions: ["2.16.0"]
+
+  tempo:
+    type: repo
+    repo: https://grafana.github.io/helm-charts
+    chart: tempo
+    versions: ["1.24.4"]
+
+  mimir-distributed:
+    type: repo
+    repo: https://grafana.github.io/helm-charts
+    chart: mimir-distributed
+    versions: ["6.0.5"]
+
+  kube-prometheus-stack:
+    type: repo
+    repo: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    versions: ["82.2.0"]
+
+  prometheus:
+    type: repo
+    repo: https://prometheus-community.github.io/helm-charts
+    chart: prometheus
+    versions: ["25.28.0"]
+
+  # ============================================================================
+  # SECURITY & POLICY
+  # ============================================================================
+
+  kyverno:
+    type: repo
+    repo: https://kyverno.github.io/kyverno
+    chart: kyverno
+    versions: ["3.3.4"]
+
+  policy-reporter:
+    type: repo
+    repo: https://kyverno.github.io/policy-reporter
+    chart: policy-reporter
+    versions: ["3.0.0"]
+
+  kiali-server:
+    type: repo
+    repo: https://kiali.org/helm-charts
+    chart: kiali-server
+    versions: ["2.4.0"]
+
+  # ============================================================================
+  # STORAGE & REGISTRY
+  # ============================================================================
+
+  harbor:
+    type: repo
+    repo: https://helm.goharbor.io
+    chart: harbor
+    versions: ["1.16.2"]
+
+  # ============================================================================
+  # IDENTITY & ACCESS
+  # ============================================================================
+
+  keycloak:
+    type: oci
+    registry: oci://registry-1.docker.io/bitnamicharts
+    chart: keycloak
+    versions: ["24.0.1"]
+
+  # ============================================================================
+  # APPLICATION PLATFORMS
+  # ============================================================================
+
+  reloader:
+    type: repo
+    repo: https://stakater.github.io/stakater-charts
+    chart: reloader
+    versions: ["2.2.8"]
+
+  # ============================================================================
+  # LOCAL CHARTS (built from fork source)
+  # ============================================================================
+
+  infisical:
+    type: local
+    path: ../forks/infisical/helm-charts/infisical-standalone-postgres
+    chart: infisical-standalone
+    versions: ["1.7.2"]
+
+  infisical-gateway:
+    type: local
+    path: ../forks/infisical/helm-charts/infisical-gateway
+    chart: infisical-gateway
+    versions: ["1.0.4"]

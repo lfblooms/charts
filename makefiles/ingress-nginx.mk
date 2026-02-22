@@ -86,9 +86,9 @@ ingress-nginx-push: ## Push ingress-nginx chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: ingress-nginx-mirror
-ingress-nginx-mirror: ## Mirror ingress-nginx chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart ingress-nginx $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+ingress-nginx-mirror: ## Mirror ingress-nginx chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart ingress-nginx $(if $(VERSION),--version $(VERSION))
 
 .PHONY: ingress-nginx-images
 ingress-nginx-images: ## List container images in ingress-nginx chart
-	@$(EXTRACT_IMAGES) $(INGRESSNGINX_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart ingress-nginx --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
