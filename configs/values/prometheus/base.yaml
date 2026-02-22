@@ -1,5 +1,5 @@
 # Prometheus Base Values
-# Fork: MisterGrinvalds/prometheus-community.helm-charts
+# Fork: lfblooms/prometheus-community.helm-charts
 # Chart: charts/prometheus
 
 # Server configuration

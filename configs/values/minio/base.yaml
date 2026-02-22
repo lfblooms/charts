@@ -1,5 +1,5 @@
 # MinIO Base Values
-# Fork: MisterGrinvalds/minio.minio
+# Fork: lfblooms/minio.minio
 # Chart: helm/minio
 
 # Mode: standalone or distributed

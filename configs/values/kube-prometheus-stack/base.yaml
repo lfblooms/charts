@@ -1,5 +1,5 @@
 # kube-prometheus-stack Base Values
-# Fork: MisterGrinvalds/prometheus-community.helm-charts
+# Fork: lfblooms/prometheus-community.helm-charts
 # Chart: charts/kube-prometheus-stack
 
 # Grafana

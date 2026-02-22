@@ -21,6 +21,19 @@ NC := \033[0m
 # Context configuration (local, cloud-prod, etc.)
 CONTEXT ?= local
 
+# OCI registry target (matches key in registry/registries.yaml)
+REGISTRY ?= local
+
+# Push script
+PUSH_CHART := ./scripts/push-chart.sh
+
+# Mirror scripts
+MIRROR_CHART := ./scripts/mirror-chart.sh
+EXTRACT_IMAGES := ./scripts/extract-images.sh
+
+# Default mirror registry
+MIRROR_REGISTRY ?= docr
+
 # =============================================================================
 # HELP
 # =============================================================================
@@ -60,6 +73,18 @@ help: ## Show this help
 	@echo ""
 	@echo "$(YELLOW)Network Management:$(NC)"
 	@grep -hE '^tailscale[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "$(YELLOW)OCI Registry & Publishing:$(NC)"
+	@grep -hE '^registry-[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@grep -hE '^(package-all|push-all)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "  Per-chart: make <chart>-package / make <chart>-push REGISTRY=<name>"
+	@echo ""
+	@echo "$(YELLOW)Mirroring (Upstream → DOCR):$(NC)"
+	@grep -hE '^mirror-all[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo ""
+	@echo "  Per-chart: make <chart>-mirror [SINCE=<ver>] [MIRROR_REGISTRY=<name>]"
+	@echo "  Per-chart: make <chart>-images  (list container images)"
 	@echo ""
 	@echo "Run 'make help-<chart>' for detailed targets (e.g., make help-argocd)"
 	@echo ""
@@ -131,6 +156,97 @@ uninstall-all: infisical-uninstall ## Uninstall all charts
 
 .PHONY: status-all
 status-all: infisical-status ## Show status of all charts
+
+# =============================================================================
+# OCI REGISTRY MANAGEMENT
+# =============================================================================
+
+.PHONY: registry-start
+registry-start: ## Start local OCI registry (Distribution)
+	@echo "$(GREEN)Starting local OCI registry...$(NC)"
+	@docker compose up -d
+	@echo "$(GREEN)Registry available at localhost:5000$(NC)"
+
+.PHONY: registry-stop
+registry-stop: ## Stop local OCI registry
+	@echo "$(YELLOW)Stopping local OCI registry...$(NC)"
+	@docker compose down
+
+.PHONY: registry-list
+registry-list: ## List charts in OCI registry (REGISTRY=local)
+	@REG_URL=$$(yq ".registries.$(REGISTRY).url" registry/registries.yaml); \
+	PLAIN=$$(yq ".registries.$(REGISTRY).plain-http" registry/registries.yaml); \
+	if [ "$$PLAIN" = "true" ]; then \
+		echo "$(GREEN)Charts in $$REG_URL:$(NC)"; \
+		curl -s "http://$$REG_URL/v2/_catalog" | yq -P '.repositories[]' 2>/dev/null || echo "No charts found or registry not running"; \
+	else \
+		echo "$(GREEN)Charts in $$REG_URL:$(NC)"; \
+		curl -s "https://$$REG_URL/v2/_catalog" | yq -P '.repositories[]' 2>/dev/null || echo "No charts found or registry not running"; \
+	fi
+
+.PHONY: registry-clean
+registry-clean: ## Remove packaged chart artifacts (.packages/)
+	@echo "$(YELLOW)Cleaning .packages/ directory...$(NC)"
+	@rm -rf .packages
+	@echo "$(GREEN)Done$(NC)"
+
+# =============================================================================
+# BULK PACKAGING & PUBLISHING
+# =============================================================================
+
+# All package targets (defined in individual makefiles)
+PACKAGE_ALL_TARGETS := \
+	infisical-package \
+	tailscale-package \
+	argocd-package \
+	cert-manager-package \
+	external-dns-package \
+	external-secrets-package \
+	grafana-package loki-package tempo-package mimir-package \
+	ingress-nginx-package \
+	istio-base-package istiod-package istio-cni-package istio-ingress-package \
+	keycloak-package \
+	kyverno-package kyverno-policies-package \
+	kube-prometheus-stack-package prometheus-package \
+	harbor-package \
+	kiali-package \
+	policy-reporter-package \
+	minio-package \
+	vault-package \
+	vault-secrets-operator-package
+
+# All push targets
+PUSH_ALL_TARGETS := $(PACKAGE_ALL_TARGETS:%-package=%-push)
+
+.PHONY: package-all
+package-all: $(PACKAGE_ALL_TARGETS) ## Package all charts
+
+.PHONY: push-all
+push-all: $(PUSH_ALL_TARGETS) ## Push all charts to OCI registry (REGISTRY=local)
+
+# =============================================================================
+# BULK MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+# All mirror targets (defined in individual makefiles)
+MIRROR_ALL_TARGETS := \
+	argocd-mirror \
+	cert-manager-mirror \
+	external-secrets-mirror \
+	vault-mirror vault-secrets-operator-mirror \
+	ingress-nginx-mirror external-dns-mirror tailscale-mirror \
+	istio-base-mirror istiod-mirror istio-cni-mirror istio-ingress-mirror \
+	grafana-mirror loki-mirror tempo-mirror mimir-mirror \
+	kube-prometheus-stack-mirror prometheus-mirror \
+	kyverno-mirror kyverno-policies-mirror \
+	policy-reporter-mirror kiali-mirror \
+	harbor-mirror minio-mirror \
+	keycloak-mirror \
+	nextcloud-mirror reloader-mirror \
+	infisical-mirror infisical-gateway-mirror
+
+.PHONY: mirror-all
+mirror-all: $(MIRROR_ALL_TARGETS) ## Mirror all charts + images to registry (MIRROR_REGISTRY=docr)
 
 # =============================================================================
 # INCLUDE CHART-SPECIFIC MAKEFILES

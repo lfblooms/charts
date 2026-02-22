@@ -1,5 +1,5 @@
 # Istio Helm Charts Makefile
-# Fork: MisterGrinvalds/istio.istio
+# Fork: lfblooms/istio.istio
 # Upstream: istio/istio
 # Charts: base, istiod, istio-cni, istio-ingress
 
@@ -217,3 +217,81 @@ istio-status: istio-base-status istiod-status istio-ingress-status ## Show statu
 istio-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Istio fork with upstream...$(NC)"
 	@cd forks/istio && git fetch upstream && git merge upstream/master --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: istio-base-package
+istio-base-package: ## Package Istio base chart
+	@$(PUSH_CHART) --chart $(ISTIO_BASE_CHART_PATH) --package-only
+
+.PHONY: istio-base-push
+istio-base-push: ## Push Istio base chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(ISTIO_BASE_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: istiod-package
+istiod-package: ## Package Istiod chart
+	@$(PUSH_CHART) --chart $(ISTIOD_CHART_PATH) --package-only
+
+.PHONY: istiod-push
+istiod-push: ## Push Istiod chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(ISTIOD_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: istio-cni-package
+istio-cni-package: ## Package Istio CNI chart
+	@$(PUSH_CHART) --chart $(ISTIO_CNI_CHART_PATH) --package-only
+
+.PHONY: istio-cni-push
+istio-cni-push: ## Push Istio CNI chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(ISTIO_CNI_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: istio-ingress-package
+istio-ingress-package: ## Package Istio ingress gateway chart
+	@$(PUSH_CHART) --chart $(ISTIO_INGRESS_CHART_PATH) --package-only
+
+.PHONY: istio-ingress-push
+istio-ingress-push: ## Push Istio ingress gateway chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(ISTIO_INGRESS_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: istio-push-all
+istio-push-all: istio-base-push istiod-push istio-cni-push istio-ingress-push ## Push all Istio charts to OCI registry
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: istio-base-mirror
+istio-base-mirror: ## Mirror Istio base chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart base $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: istio-base-images
+istio-base-images: ## List container images in Istio base chart
+	@$(EXTRACT_IMAGES) $(ISTIO_BASE_CHART_PATH)
+
+.PHONY: istiod-mirror
+istiod-mirror: ## Mirror Istiod chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart istiod $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: istiod-images
+istiod-images: ## List container images in Istiod chart
+	@$(EXTRACT_IMAGES) $(ISTIOD_CHART_PATH)
+
+.PHONY: istio-cni-mirror
+istio-cni-mirror: ## Mirror Istio CNI chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart cni $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: istio-cni-images
+istio-cni-images: ## List container images in Istio CNI chart
+	@$(EXTRACT_IMAGES) $(ISTIO_CNI_CHART_PATH)
+
+.PHONY: istio-ingress-mirror
+istio-ingress-mirror: ## Mirror Istio ingress gateway chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart gateway $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: istio-ingress-images
+istio-ingress-images: ## List container images in Istio ingress gateway chart
+	@$(EXTRACT_IMAGES) $(ISTIO_INGRESS_CHART_PATH)
+
+.PHONY: istio-mirror-all
+istio-mirror-all: istio-base-mirror istiod-mirror istio-cni-mirror istio-ingress-mirror ## Mirror all Istio charts

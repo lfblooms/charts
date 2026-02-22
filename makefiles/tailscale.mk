@@ -128,3 +128,27 @@ tailscale-connectors: ## List Tailscale Connectors
 tailscale-proxyclasses: ## List Tailscale ProxyClasses
 	@echo "$(GREEN)ProxyClasses:$(NC)"
 	@$(KUBECTL) get proxyclasses -A 2>/dev/null || echo "No proxy classes found"
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: tailscale-package
+tailscale-package: ## Package tailscale chart
+	@$(PUSH_CHART) --chart $(TAILSCALE_CHART) --package-only
+
+.PHONY: tailscale-push
+tailscale-push: ## Push tailscale chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(TAILSCALE_CHART) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: tailscale-mirror
+tailscale-mirror: ## Mirror Tailscale chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart tailscale-operator $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: tailscale-images
+tailscale-images: ## List container images in Tailscale chart
+	@$(EXTRACT_IMAGES) $(TAILSCALE_CHART)

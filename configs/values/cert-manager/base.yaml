@@ -1,5 +1,5 @@
 # cert-manager Base Values
-# Fork: MisterGrinvalds/cert-manager.cert-manager
+# Fork: lfblooms/cert-manager.cert-manager
 # Chart: deploy/charts/cert-manager
 
 # Install CRDs with the chart

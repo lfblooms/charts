@@ -39,7 +39,7 @@ Chart Forks Status
 ==================
 
 forks/infisical
-  Origin:   https://github.com/MisterGrinvalds/Infisical.infisical.git
+  Origin:   https://github.com/lfblooms/Infisical.infisical.git
   Upstream: https://github.com/Infisical/infisical.git
   Branch:   main @ f515a76
   Status:   Up to date with upstream
@@ -51,7 +51,7 @@ forks/infisical
       Values: (none configured)
 
 forks/cert-manager
-  Origin:   https://github.com/MisterGrinvalds/cert-manager.cert-manager.git
+  Origin:   https://github.com/lfblooms/cert-manager.cert-manager.git
   Upstream: https://github.com/cert-manager/cert-manager.git
   Branch:   main @ abc1234
   Status:   3 commits behind upstream

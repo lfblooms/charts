@@ -1,5 +1,5 @@
 # Kiali Helm Chart Makefile
-# Fork: MisterGrinvalds/kiali.helm-charts
+# Fork: lfblooms/kiali.helm-charts
 # Upstream: kiali/helm-charts
 
 KIALI_CHART_PATH := forks/kiali-helm-charts/kiali-operator
@@ -76,3 +76,27 @@ kiali-port-forward: ## Port forward Kiali UI (localhost:20001)
 kiali-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Kiali fork with upstream...$(NC)"
 	@cd forks/kiali-helm-charts && git fetch upstream && git merge upstream/master --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: kiali-package
+kiali-package: ## Package Kiali operator chart
+	@$(PUSH_CHART) --chart $(KIALI_CHART_PATH) --package-only
+
+.PHONY: kiali-push
+kiali-push: ## Push Kiali operator chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(KIALI_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: kiali-mirror
+kiali-mirror: ## Mirror Kiali chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart kiali-server $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: kiali-images
+kiali-images: ## List container images in Kiali chart
+	@$(EXTRACT_IMAGES) $(KIALI_CHART_PATH)

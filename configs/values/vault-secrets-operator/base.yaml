@@ -1,5 +1,5 @@
 # Vault Secrets Operator Base Values
-# Fork: MisterGrinvalds/hashicorp.vault-secrets-operator
+# Fork: lfblooms/hashicorp.vault-secrets-operator
 # Chart: chart
 
 # Default Vault connection (override per context)

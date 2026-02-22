@@ -1,5 +1,5 @@
 # external-secrets Helm Chart Makefile
-# Fork: MisterGrinvalds/external-secrets.external-secrets
+# Fork: lfblooms/external-secrets.external-secrets
 # Upstream: external-secrets/external-secrets
 
 EXTERNALSECRETS_CHART_PATH := forks/external-secrets/deploy/charts/external-secrets
@@ -77,3 +77,27 @@ external-secrets-logs: ## View external-secrets logs
 external-secrets-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing external-secrets fork with upstream...$(NC)"
 	@cd forks/external-secrets && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: external-secrets-package
+external-secrets-package: ## Package external-secrets chart
+	@$(PUSH_CHART) --chart $(EXTERNALSECRETS_CHART_PATH) --package-only
+
+.PHONY: external-secrets-push
+external-secrets-push: ## Push external-secrets chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(EXTERNALSECRETS_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: external-secrets-mirror
+external-secrets-mirror: ## Mirror external-secrets chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart external-secrets $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: external-secrets-images
+external-secrets-images: ## List container images in external-secrets chart
+	@$(EXTRACT_IMAGES) $(EXTERNALSECRETS_CHART_PATH)

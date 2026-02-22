@@ -1,5 +1,5 @@
 # Vault Secrets Operator Helm Chart Makefile
-# Fork: MisterGrinvalds/hashicorp.vault-secrets-operator
+# Fork: lfblooms/hashicorp.vault-secrets-operator
 # Upstream: hashicorp/vault-secrets-operator
 
 VAULTSO_CHART_PATH := forks/vault-secrets-operator/chart
@@ -68,3 +68,27 @@ vault-secrets-operator-logs: ## View Vault Secrets Operator logs
 vault-secrets-operator-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Vault Secrets Operator fork with upstream...$(NC)"
 	@cd forks/vault-secrets-operator && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: vault-secrets-operator-package
+vault-secrets-operator-package: ## Package Vault Secrets Operator chart
+	@$(PUSH_CHART) --chart $(VAULTSO_CHART_PATH) --package-only
+
+.PHONY: vault-secrets-operator-push
+vault-secrets-operator-push: ## Push Vault Secrets Operator chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(VAULTSO_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: vault-secrets-operator-mirror
+vault-secrets-operator-mirror: ## Mirror Vault Secrets Operator chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart vault-secrets-operator $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: vault-secrets-operator-images
+vault-secrets-operator-images: ## List container images in Vault Secrets Operator chart
+	@$(EXTRACT_IMAGES) $(VAULTSO_CHART_PATH)

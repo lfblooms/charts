@@ -92,7 +92,7 @@ INFISICAL - Priority: HIGH
 ═══════════════════════════════════════════════════════════════
 
 Repository: forks/infisical
-  Origin:   MisterGrinvalds/Infisical.infisical
+  Origin:   lfblooms/Infisical.infisical
   Upstream: Infisical/infisical
 
 Charts:

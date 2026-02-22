@@ -1,54 +1,54 @@
 [submodule "forks/infisical"]
 	path = forks/infisical
-	url = https://github.com/MisterGrinvalds/Infisical.infisical.git
+	url = https://github.com/lfblooms/Infisical.infisical.git
 [submodule "forks/tailscale"]
 	path = forks/tailscale
-	url = https://github.com/MisterGrinvalds/tailscale.tailscale.git
+	url = https://github.com/lfblooms/tailscale.tailscale.git
 [submodule "forks/argo-helm"]
 	path = forks/argo-helm
-	url = https://github.com/MisterGrinvalds/argoproj.argo-helm.git
+	url = https://github.com/lfblooms/argoproj.argo-helm.git
 [submodule "forks/cert-manager"]
 	path = forks/cert-manager
-	url = https://github.com/MisterGrinvalds/cert-manager.cert-manager.git
+	url = https://github.com/lfblooms/cert-manager.cert-manager.git
 [submodule "forks/external-dns"]
 	path = forks/external-dns
-	url = https://github.com/MisterGrinvalds/kubernetes-sigs.external-dns.git
+	url = https://github.com/lfblooms/kubernetes-sigs.external-dns.git
 [submodule "forks/external-secrets"]
 	path = forks/external-secrets
-	url = https://github.com/MisterGrinvalds/external-secrets.external-secrets.git
+	url = https://github.com/lfblooms/external-secrets.external-secrets.git
 [submodule "forks/grafana-helm-charts"]
 	path = forks/grafana-helm-charts
-	url = https://github.com/MisterGrinvalds/grafana.helm-charts.git
+	url = https://github.com/lfblooms/grafana.helm-charts.git
 [submodule "forks/ingress-nginx"]
 	path = forks/ingress-nginx
-	url = https://github.com/MisterGrinvalds/kubernetes.ingress-nginx.git
+	url = https://github.com/lfblooms/kubernetes.ingress-nginx.git
 [submodule "forks/istio"]
 	path = forks/istio
-	url = https://github.com/MisterGrinvalds/istio.istio.git
+	url = https://github.com/lfblooms/istio.istio.git
 [submodule "forks/bitnami-charts"]
 	path = forks/bitnami-charts
-	url = https://github.com/MisterGrinvalds/bitnami.charts.git
+	url = https://github.com/lfblooms/bitnami.charts.git
 [submodule "forks/kyverno"]
 	path = forks/kyverno
-	url = https://github.com/MisterGrinvalds/kyverno.kyverno.git
+	url = https://github.com/lfblooms/kyverno.kyverno.git
 [submodule "forks/prometheus-helm-charts"]
 	path = forks/prometheus-helm-charts
-	url = https://github.com/MisterGrinvalds/prometheus-community.helm-charts.git
+	url = https://github.com/lfblooms/prometheus-community.helm-charts.git
 [submodule "forks/harbor-helm"]
 	path = forks/harbor-helm
-	url = https://github.com/MisterGrinvalds/goharbor.harbor-helm.git
+	url = https://github.com/lfblooms/goharbor.harbor-helm.git
 [submodule "forks/kiali-helm-charts"]
 	path = forks/kiali-helm-charts
-	url = https://github.com/MisterGrinvalds/kiali.helm-charts.git
+	url = https://github.com/lfblooms/kiali.helm-charts.git
 [submodule "forks/policy-reporter"]
 	path = forks/policy-reporter
-	url = https://github.com/MisterGrinvalds/kyverno.policy-reporter.git
+	url = https://github.com/lfblooms/kyverno.policy-reporter.git
 [submodule "forks/minio"]
 	path = forks/minio
-	url = https://github.com/MisterGrinvalds/minio.minio.git
+	url = https://github.com/lfblooms/minio.minio.git
 [submodule "forks/vault-helm"]
 	path = forks/vault-helm
-	url = https://github.com/MisterGrinvalds/hashicorp.vault-helm.git
+	url = https://github.com/lfblooms/hashicorp.vault-helm.git
 [submodule "forks/vault-secrets-operator"]
 	path = forks/vault-secrets-operator
-	url = https://github.com/MisterGrinvalds/hashicorp.vault-secrets-operator.git
+	url = https://github.com/lfblooms/hashicorp.vault-secrets-operator.git

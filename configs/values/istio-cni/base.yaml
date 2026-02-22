@@ -1,5 +1,5 @@
 # Istio CNI Base Values
-# Fork: MisterGrinvalds/istio.istio
+# Fork: lfblooms/istio.istio
 # Chart: manifests/charts/istio-cni
 
 # CNI configuration

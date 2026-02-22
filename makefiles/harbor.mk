@@ -1,5 +1,5 @@
 # Harbor Helm Chart Makefile
-# Fork: MisterGrinvalds/goharbor.harbor-helm
+# Fork: lfblooms/goharbor.harbor-helm
 # Upstream: goharbor/harbor-helm
 
 HARBOR_CHART_PATH := forks/harbor-helm
@@ -74,3 +74,27 @@ harbor-port-forward: ## Port forward Harbor UI (localhost:8080)
 harbor-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Harbor fork with upstream...$(NC)"
 	@cd forks/harbor-helm && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: harbor-package
+harbor-package: ## Package Harbor chart
+	@$(PUSH_CHART) --chart $(HARBOR_CHART_PATH) --package-only
+
+.PHONY: harbor-push
+harbor-push: ## Push Harbor chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(HARBOR_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: harbor-mirror
+harbor-mirror: ## Mirror Harbor chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart harbor $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: harbor-images
+harbor-images: ## List container images in Harbor chart
+	@$(EXTRACT_IMAGES) $(HARBOR_CHART_PATH)

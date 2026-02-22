@@ -1,5 +1,5 @@
 # ArgoCD Helm Chart Makefile
-# Fork: MisterGrinvalds/argoproj.argo-helm
+# Fork: lfblooms/argoproj.argo-helm
 # Upstream: argoproj/argo-helm
 
 ARGOCD_CHART_PATH := forks/argo-helm/charts/argo-cd
@@ -78,3 +78,27 @@ argocd-password: ## Get ArgoCD admin password
 argocd-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing ArgoCD fork with upstream...$(NC)"
 	@cd forks/argo-helm && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: argocd-package
+argocd-package: ## Package ArgoCD chart
+	@$(PUSH_CHART) --chart $(ARGOCD_CHART_PATH) --package-only
+
+.PHONY: argocd-push
+argocd-push: ## Push ArgoCD chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(ARGOCD_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: argocd-mirror
+argocd-mirror: ## Mirror ArgoCD chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart argo-cd $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: argocd-images
+argocd-images: ## List container images in ArgoCD chart
+	@$(EXTRACT_IMAGES) $(ARGOCD_CHART_PATH)

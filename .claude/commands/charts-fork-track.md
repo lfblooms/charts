@@ -35,7 +35,7 @@ Initialize or update submodule tracking for chart forks.
 ### After Fresh Clone
 When someone clones the repository, submodules need initialization:
 ```bash
-git clone https://github.com/MisterGrinvalds/charts.git
+git clone https://github.com/lfblooms/charts.git
 cd charts
 /charts-fork-track
 ```

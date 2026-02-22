@@ -1,5 +1,5 @@
 # Keycloak (Bitnami) Helm Chart Makefile
-# Fork: MisterGrinvalds/bitnami.charts
+# Fork: lfblooms/bitnami.charts
 # Upstream: bitnami/charts
 
 KEYCLOAK_CHART_PATH := forks/bitnami-charts/bitnami/keycloak
@@ -78,3 +78,27 @@ keycloak-admin-password: ## Get Keycloak admin password
 keycloak-sync: ## Sync Bitnami fork with upstream
 	@echo "$(GREEN)Syncing Bitnami charts fork with upstream...$(NC)"
 	@cd forks/bitnami-charts && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: keycloak-package
+keycloak-package: ## Package Keycloak chart
+	@$(PUSH_CHART) --chart $(KEYCLOAK_CHART_PATH) --package-only
+
+.PHONY: keycloak-push
+keycloak-push: ## Push Keycloak chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(KEYCLOAK_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: keycloak-mirror
+keycloak-mirror: ## Mirror Keycloak chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart keycloak $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: keycloak-images
+keycloak-images: ## List container images in Keycloak chart
+	@$(EXTRACT_IMAGES) $(KEYCLOAK_CHART_PATH)

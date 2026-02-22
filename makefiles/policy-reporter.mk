@@ -1,5 +1,5 @@
 # Policy Reporter Helm Chart Makefile
-# Fork: MisterGrinvalds/kyverno.policy-reporter
+# Fork: lfblooms/kyverno.policy-reporter
 # Upstream: kyverno/policy-reporter
 
 POLICYREPORTER_CHART_PATH := forks/policy-reporter/charts/policy-reporter
@@ -73,3 +73,27 @@ policy-reporter-port-forward: ## Port forward Policy Reporter UI (localhost:8082
 policy-reporter-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Policy Reporter fork with upstream...$(NC)"
 	@cd forks/policy-reporter && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: policy-reporter-package
+policy-reporter-package: ## Package Policy Reporter chart
+	@$(PUSH_CHART) --chart $(POLICYREPORTER_CHART_PATH) --package-only
+
+.PHONY: policy-reporter-push
+policy-reporter-push: ## Push Policy Reporter chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(POLICYREPORTER_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: policy-reporter-mirror
+policy-reporter-mirror: ## Mirror Policy Reporter chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart policy-reporter $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: policy-reporter-images
+policy-reporter-images: ## List container images in Policy Reporter chart
+	@$(EXTRACT_IMAGES) $(POLICYREPORTER_CHART_PATH)

@@ -1,5 +1,5 @@
 # Kiali Operator Base Values
-# Fork: MisterGrinvalds/kiali.helm-charts
+# Fork: lfblooms/kiali.helm-charts
 # Chart: kiali-operator
 
 # CR configuration for Kiali server

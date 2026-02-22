@@ -12,7 +12,7 @@ Forks follow the naming convention: `forks/<Owner>.<repo>`
 
 Example:
 - Upstream: `https://github.com/Infisical/infisical`
-- Fork: `https://github.com/MisterGrinvalds/Infisical.infisical`
+- Fork: `https://github.com/lfblooms/Infisical.infisical`
 - Submodule path: `forks/infisical`
 
 ## Instructions
@@ -27,7 +27,7 @@ Example:
 
 3. **Add Submodule**: Add the fork as a git submodule
    ```bash
-   git submodule add https://github.com/MisterGrinvalds/<Owner>.<repo>.git forks/<repo>
+   git submodule add https://github.com/lfblooms/<Owner>.<repo>.git forks/<repo>
    ```
 
 4. **Configure Upstream**: Set up upstream remote for sync
@@ -57,11 +57,11 @@ Example:
 
 On success:
 ```
-Forked: Infisical/infisical -> MisterGrinvalds/Infisical.infisical
+Forked: Infisical/infisical -> lfblooms/Infisical.infisical
 
 Submodule added:
   Path: forks/infisical
-  Origin: https://github.com/MisterGrinvalds/Infisical.infisical.git
+  Origin: https://github.com/lfblooms/Infisical.infisical.git
   Upstream: https://github.com/Infisical/infisical.git
 
 Helm charts found:
@@ -76,6 +76,6 @@ Next steps:
 
 ## Error Handling
 
-- **Fork exists**: "Fork already exists at MisterGrinvalds/<Owner>.<repo>"
+- **Fork exists**: "Fork already exists at lfblooms/<Owner>.<repo>"
 - **Submodule exists**: "Submodule 'forks/<repo>' already configured"
 - **No charts found**: "No Helm charts found in repository"

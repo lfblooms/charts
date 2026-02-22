@@ -1,5 +1,5 @@
 # ingress-nginx Base Values
-# Fork: MisterGrinvalds/kubernetes.ingress-nginx
+# Fork: lfblooms/kubernetes.ingress-nginx
 # Chart: charts/ingress-nginx
 
 controller:

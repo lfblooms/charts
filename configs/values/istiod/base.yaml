@@ -1,5 +1,5 @@
 # Istiod (Control Plane) Base Values
-# Fork: MisterGrinvalds/istio.istio
+# Fork: lfblooms/istio.istio
 # Chart: manifests/charts/istio-control/istio-discovery
 
 # Pilot configuration

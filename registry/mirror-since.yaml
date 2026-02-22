@@ -1,0 +1,61 @@
+# registry/mirror-since.yaml — Per-chart version thresholds for mirroring
+#
+# Each key is a chart name (matching a key in upstreams.yaml).
+# The value is the minimum version to mirror (inclusive).
+#
+# Usage:
+#   mirror-chart.sh reads this file when --since is not provided on the CLI.
+#   Charts not listed here are skipped by mirror-all.
+#
+# To mirror a chart not listed here, pass --since explicitly:
+#   ./scripts/mirror-chart.sh --chart <name> --since <version> --registry docr
+
+since:
+  # GitOps & CD
+  argo-cd: "7.0.0"
+
+  # Secrets Management
+  cert-manager: "1.14.0"
+  external-secrets: "0.10.0"
+  vault: "0.28.0"
+  vault-secrets-operator: "0.8.0"
+
+  # Networking
+  ingress-nginx: "4.10.0"
+  external-dns: "8.0.0"
+  tailscale-operator: "1.70.0"
+
+  # Service Mesh (Istio)
+  base: "1.22.0"
+  istiod: "1.22.0"
+  cni: "1.22.0"
+  gateway: "1.22.0"
+
+  # Observability
+  grafana: "8.0.0"
+  loki: "6.0.0"
+  tempo: "1.10.0"
+  mimir-distributed: "5.4.0"
+  kube-prometheus-stack: "60.0.0"
+  prometheus: "25.0.0"
+
+  # Security & Policy
+  kyverno: "3.2.0"
+  kyverno-policies: "3.2.0"
+  policy-reporter: "2.24.0"
+  kiali-server: "1.86.0"
+
+  # Storage & Registry
+  harbor: "1.15.0"
+  minio: "5.2.0"
+
+  # Identity & Access
+  keycloak: "24.0.0"
+
+  # Application Platforms
+  nextcloud: "6.0.0"
+  reloader: "1.2.0"
+
+  # Local Charts
+  infisical: "0.8.0"
+  infisical-gateway: "0.1.0"

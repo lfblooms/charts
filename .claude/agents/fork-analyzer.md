@@ -87,7 +87,7 @@ Fork Analysis: infisical
 ═══════════════════════════════════════════════════════════════
 
 Repository: forks/infisical
-  Origin:   https://github.com/MisterGrinvalds/Infisical.infisical
+  Origin:   https://github.com/lfblooms/Infisical.infisical
   Upstream: https://github.com/Infisical/infisical
   Branch:   main
 

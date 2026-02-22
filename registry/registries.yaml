@@ -1,0 +1,21 @@
+# OCI Registry Configuration
+# Used by scripts/push-chart.sh to resolve registry targets.
+#
+# Each entry defines:
+#   url:        Registry host (no oci:// prefix)
+#   plain-http: Use --plain-http flag for helm push (required for non-TLS registries)
+#
+# Usage:
+#   make <chart>-push REGISTRY=local
+#   make push-all REGISTRY=ghcr
+
+registries:
+  local:
+    url: localhost:5000
+    plain-http: true
+  docr:
+    url: registry.digitalocean.com/greenforests
+    plain-http: false
+  # ghcr:
+  #   url: ghcr.io/lfblooms
+  #   plain-http: false

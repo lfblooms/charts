@@ -1,5 +1,5 @@
 # cert-manager Helm Chart Makefile
-# Fork: MisterGrinvalds/cert-manager.cert-manager
+# Fork: lfblooms/cert-manager.cert-manager
 # Upstream: cert-manager/cert-manager
 
 CERTMANAGER_CHART_PATH := forks/cert-manager/deploy/charts/cert-manager
@@ -73,3 +73,27 @@ cert-manager-logs: ## View cert-manager logs
 cert-manager-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing cert-manager fork with upstream...$(NC)"
 	@cd forks/cert-manager && git fetch upstream && git merge upstream/master --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: cert-manager-package
+cert-manager-package: ## Package cert-manager chart
+	@$(PUSH_CHART) --chart $(CERTMANAGER_CHART_PATH) --package-only
+
+.PHONY: cert-manager-push
+cert-manager-push: ## Push cert-manager chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(CERTMANAGER_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: cert-manager-mirror
+cert-manager-mirror: ## Mirror cert-manager chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart cert-manager $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: cert-manager-images
+cert-manager-images: ## List container images in cert-manager chart
+	@$(EXTRACT_IMAGES) $(CERTMANAGER_CHART_PATH)

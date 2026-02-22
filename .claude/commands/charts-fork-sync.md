@@ -63,7 +63,7 @@ forks/<repo>/                    # Git submodule (fork)
 Sync Status: infisical
 
 Fork: forks/infisical
-  Origin:   MisterGrinvalds/Infisical.infisical
+  Origin:   lfblooms/Infisical.infisical
   Upstream: Infisical/infisical
 
 Current:    main @ abc1234

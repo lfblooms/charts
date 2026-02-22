@@ -1,5 +1,5 @@
 # MinIO Helm Chart Makefile
-# Fork: MisterGrinvalds/minio.minio
+# Fork: lfblooms/minio.minio
 # Upstream: minio/minio
 
 MINIO_CHART_PATH := forks/minio/helm/minio
@@ -84,3 +84,27 @@ minio-credentials: ## Get MinIO access credentials
 minio-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing MinIO fork with upstream...$(NC)"
 	@cd forks/minio && git fetch upstream && git merge upstream/master --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: minio-package
+minio-package: ## Package MinIO chart
+	@$(PUSH_CHART) --chart $(MINIO_CHART_PATH) --package-only
+
+.PHONY: minio-push
+minio-push: ## Push MinIO chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(MINIO_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: minio-mirror
+minio-mirror: ## Mirror MinIO chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart minio $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: minio-images
+minio-images: ## List container images in MinIO chart
+	@$(EXTRACT_IMAGES) $(MINIO_CHART_PATH)

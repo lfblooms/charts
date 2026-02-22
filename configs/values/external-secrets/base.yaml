@@ -1,5 +1,5 @@
 # external-secrets Base Values
-# Fork: MisterGrinvalds/external-secrets.external-secrets
+# Fork: lfblooms/external-secrets.external-secrets
 # Chart: deploy/charts/external-secrets
 
 # Install CRDs

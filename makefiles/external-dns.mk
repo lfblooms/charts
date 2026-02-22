@@ -1,5 +1,5 @@
 # external-dns Helm Chart Makefile
-# Fork: MisterGrinvalds/kubernetes-sigs.external-dns
+# Fork: lfblooms/kubernetes-sigs.external-dns
 # Upstream: kubernetes-sigs/external-dns
 
 EXTERNALDNS_CHART_PATH := forks/external-dns/charts/external-dns
@@ -68,3 +68,27 @@ external-dns-logs: ## View external-dns logs
 external-dns-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing external-dns fork with upstream...$(NC)"
 	@cd forks/external-dns && git fetch upstream && git merge upstream/master --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: external-dns-package
+external-dns-package: ## Package external-dns chart
+	@$(PUSH_CHART) --chart $(EXTERNALDNS_CHART_PATH) --package-only
+
+.PHONY: external-dns-push
+external-dns-push: ## Push external-dns chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(EXTERNALDNS_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: external-dns-mirror
+external-dns-mirror: ## Mirror external-dns chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart external-dns $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: external-dns-images
+external-dns-images: ## List container images in external-dns chart
+	@$(EXTRACT_IMAGES) $(EXTERNALDNS_CHART_PATH)

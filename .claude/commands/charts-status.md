@@ -42,7 +42,7 @@ Charts Repository Status
 
 Forks (git submodules):
   forks/infisical @ f515a76
-    Origin:   MisterGrinvalds/Infisical.infisical
+    Origin:   lfblooms/Infisical.infisical
     Upstream: Infisical/infisical
     Status:   Up to date
 

@@ -145,3 +145,35 @@ infisical-restart: ## Restart infisical pods
 infisical-wait: ## Wait for infisical pods to be ready
 	@echo "$(GREEN)Waiting for pods to be ready...$(NC)"
 	@$(KUBECTL) wait --for=condition=ready pod -l app.kubernetes.io/name=infisical -n $(INFISICAL_NAMESPACE) --timeout=300s
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: infisical-package
+infisical-package: ## Package infisical chart
+	@$(PUSH_CHART) --chart $(INFISICAL_CHART) --package-only
+
+.PHONY: infisical-push
+infisical-push: ## Push infisical chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(INFISICAL_CHART) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: infisical-mirror
+infisical-mirror: ## Mirror Infisical chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart infisical $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: infisical-images
+infisical-images: ## List container images in Infisical chart
+	@$(EXTRACT_IMAGES) $(INFISICAL_CHART)
+
+.PHONY: infisical-gateway-mirror
+infisical-gateway-mirror: ## Mirror Infisical Gateway chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart infisical-gateway $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: infisical-gateway-images
+infisical-gateway-images: ## List container images in Infisical Gateway chart
+	@$(EXTRACT_IMAGES) forks/infisical/helm-charts/infisical-gateway

@@ -1,5 +1,5 @@
 # Vault Base Values
-# Fork: MisterGrinvalds/hashicorp.vault-helm
+# Fork: lfblooms/hashicorp.vault-helm
 # Chart: . (root)
 
 # Server configuration

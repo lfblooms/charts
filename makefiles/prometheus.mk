@@ -1,5 +1,5 @@
 # Prometheus Community Helm Charts Makefile
-# Fork: MisterGrinvalds/prometheus-community.helm-charts
+# Fork: lfblooms/prometheus-community.helm-charts
 # Upstream: prometheus-community/helm-charts
 # Charts: prometheus, kube-prometheus-stack
 
@@ -136,3 +136,43 @@ kube-prometheus-stack-status: ## Show kube-prometheus-stack status
 prometheus-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Prometheus helm-charts fork with upstream...$(NC)"
 	@cd forks/prometheus-helm-charts && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: prometheus-package
+prometheus-package: ## Package Prometheus chart
+	@$(PUSH_CHART) --chart $(PROMETHEUS_CHART_PATH) --package-only
+
+.PHONY: prometheus-push
+prometheus-push: ## Push Prometheus chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(PROMETHEUS_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: kube-prometheus-stack-package
+kube-prometheus-stack-package: ## Package kube-prometheus-stack chart
+	@$(PUSH_CHART) --chart $(KUBEPROMSTACK_CHART_PATH) --package-only
+
+.PHONY: kube-prometheus-stack-push
+kube-prometheus-stack-push: ## Push kube-prometheus-stack chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(KUBEPROMSTACK_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: prometheus-mirror
+prometheus-mirror: ## Mirror Prometheus chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart prometheus $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: prometheus-images
+prometheus-images: ## List container images in Prometheus chart
+	@$(EXTRACT_IMAGES) $(PROMETHEUS_CHART_PATH)
+
+.PHONY: kube-prometheus-stack-mirror
+kube-prometheus-stack-mirror: ## Mirror kube-prometheus-stack chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart kube-prometheus-stack $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: kube-prometheus-stack-images
+kube-prometheus-stack-images: ## List container images in kube-prometheus-stack chart
+	@$(EXTRACT_IMAGES) $(KUBEPROMSTACK_CHART_PATH)

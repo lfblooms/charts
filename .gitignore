@@ -1,0 +1,6 @@
+# Packaged chart artifacts
+.packages/
+
+# Claude Code state
+.claude/state-*.json
+.claude/status.json

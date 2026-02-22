@@ -1,5 +1,5 @@
 # ArgoCD Base Values
-# Fork: MisterGrinvalds/argoproj.argo-helm
+# Fork: lfblooms/argoproj.argo-helm
 # Chart: charts/argo-cd
 
 # Server configuration

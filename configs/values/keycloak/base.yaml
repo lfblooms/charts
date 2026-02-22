@@ -1,5 +1,5 @@
 # Keycloak (Bitnami) Base Values
-# Fork: MisterGrinvalds/bitnami.charts
+# Fork: lfblooms/bitnami.charts
 # Chart: bitnami/keycloak
 
 # Authentication

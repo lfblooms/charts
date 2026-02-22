@@ -1,5 +1,5 @@
 # ingress-nginx Helm Chart Makefile
-# Fork: MisterGrinvalds/kubernetes.ingress-nginx
+# Fork: lfblooms/kubernetes.ingress-nginx
 # Upstream: kubernetes/ingress-nginx
 
 INGRESSNGINX_CHART_PATH := forks/ingress-nginx/charts/ingress-nginx
@@ -68,3 +68,27 @@ ingress-nginx-logs: ## View ingress-nginx logs
 ingress-nginx-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing ingress-nginx fork with upstream...$(NC)"
 	@cd forks/ingress-nginx && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: ingress-nginx-package
+ingress-nginx-package: ## Package ingress-nginx chart
+	@$(PUSH_CHART) --chart $(INGRESSNGINX_CHART_PATH) --package-only
+
+.PHONY: ingress-nginx-push
+ingress-nginx-push: ## Push ingress-nginx chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(INGRESSNGINX_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: ingress-nginx-mirror
+ingress-nginx-mirror: ## Mirror ingress-nginx chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart ingress-nginx $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: ingress-nginx-images
+ingress-nginx-images: ## List container images in ingress-nginx chart
+	@$(EXTRACT_IMAGES) $(INGRESSNGINX_CHART_PATH)

@@ -1,5 +1,5 @@
 # Kyverno Policies Base Values
-# Fork: MisterGrinvalds/kyverno.kyverno
+# Fork: lfblooms/kyverno.kyverno
 # Chart: charts/kyverno-policies
 
 # Pod Security Standards

@@ -1,5 +1,5 @@
 # Grafana Helm Charts Makefile
-# Fork: MisterGrinvalds/grafana.helm-charts
+# Fork: lfblooms/grafana.helm-charts
 # Upstream: grafana/helm-charts
 # Charts: grafana, loki, tempo, mimir-distributed
 
@@ -288,3 +288,81 @@ observability-status: grafana-status loki-status tempo-status ## Show status of 
 grafana-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Grafana helm-charts fork with upstream...$(NC)"
 	@cd forks/grafana-helm-charts && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: grafana-package
+grafana-package: ## Package Grafana chart
+	@$(PUSH_CHART) --chart $(GRAFANA_CHART_PATH) --package-only
+
+.PHONY: grafana-push
+grafana-push: ## Push Grafana chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(GRAFANA_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: loki-package
+loki-package: ## Package Loki chart
+	@$(PUSH_CHART) --chart $(LOKI_CHART_PATH) --package-only
+
+.PHONY: loki-push
+loki-push: ## Push Loki chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(LOKI_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: tempo-package
+tempo-package: ## Package Tempo chart
+	@$(PUSH_CHART) --chart $(TEMPO_CHART_PATH) --package-only
+
+.PHONY: tempo-push
+tempo-push: ## Push Tempo chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(TEMPO_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: mimir-package
+mimir-package: ## Package Mimir chart
+	@$(PUSH_CHART) --chart $(MIMIR_CHART_PATH) --package-only
+
+.PHONY: mimir-push
+mimir-push: ## Push Mimir chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(MIMIR_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: grafana-push-all
+grafana-push-all: grafana-push loki-push tempo-push mimir-push ## Push all Grafana stack charts to OCI registry
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: grafana-mirror
+grafana-mirror: ## Mirror Grafana chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart grafana $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: grafana-images
+grafana-images: ## List container images in Grafana chart
+	@$(EXTRACT_IMAGES) $(GRAFANA_CHART_PATH)
+
+.PHONY: loki-mirror
+loki-mirror: ## Mirror Loki chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart loki $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: loki-images
+loki-images: ## List container images in Loki chart
+	@$(EXTRACT_IMAGES) $(LOKI_CHART_PATH)
+
+.PHONY: tempo-mirror
+tempo-mirror: ## Mirror Tempo chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart tempo $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: tempo-images
+tempo-images: ## List container images in Tempo chart
+	@$(EXTRACT_IMAGES) $(TEMPO_CHART_PATH)
+
+.PHONY: mimir-mirror
+mimir-mirror: ## Mirror Mimir chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart mimir-distributed $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: mimir-images
+mimir-images: ## List container images in Mimir chart
+	@$(EXTRACT_IMAGES) $(MIMIR_CHART_PATH)
+
+.PHONY: grafana-mirror-all
+grafana-mirror-all: grafana-mirror loki-mirror tempo-mirror mimir-mirror ## Mirror all Grafana stack charts

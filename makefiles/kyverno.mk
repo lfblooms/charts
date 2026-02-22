@@ -1,5 +1,5 @@
 # Kyverno Helm Chart Makefile
-# Fork: MisterGrinvalds/kyverno.kyverno
+# Fork: lfblooms/kyverno.kyverno
 # Upstream: kyverno/kyverno
 
 KYVERNO_CHART_PATH := forks/kyverno/charts/kyverno
@@ -97,3 +97,43 @@ kyverno-policies-uninstall: ## Uninstall Kyverno policies
 kyverno-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Kyverno fork with upstream...$(NC)"
 	@cd forks/kyverno && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: kyverno-package
+kyverno-package: ## Package Kyverno chart
+	@$(PUSH_CHART) --chart $(KYVERNO_CHART_PATH) --package-only
+
+.PHONY: kyverno-push
+kyverno-push: ## Push Kyverno chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(KYVERNO_CHART_PATH) --registry $(REGISTRY)
+
+.PHONY: kyverno-policies-package
+kyverno-policies-package: ## Package Kyverno policies chart
+	@$(PUSH_CHART) --chart $(KYVERNO_POLICIES_CHART_PATH) --package-only
+
+.PHONY: kyverno-policies-push
+kyverno-policies-push: ## Push Kyverno policies chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(KYVERNO_POLICIES_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: kyverno-mirror
+kyverno-mirror: ## Mirror Kyverno chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart kyverno $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: kyverno-images
+kyverno-images: ## List container images in Kyverno chart
+	@$(EXTRACT_IMAGES) $(KYVERNO_CHART_PATH)
+
+.PHONY: kyverno-policies-mirror
+kyverno-policies-mirror: ## Mirror Kyverno policies chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart kyverno-policies $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: kyverno-policies-images
+kyverno-policies-images: ## List container images in Kyverno policies chart
+	@$(EXTRACT_IMAGES) $(KYVERNO_POLICIES_CHART_PATH)

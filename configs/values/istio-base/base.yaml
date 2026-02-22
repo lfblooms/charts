@@ -1,5 +1,5 @@
 # Istio Base Values
-# Fork: MisterGrinvalds/istio.istio
+# Fork: lfblooms/istio.istio
 # Chart: manifests/charts/base
 
 # Default profile

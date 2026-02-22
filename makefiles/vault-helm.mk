@@ -1,5 +1,5 @@
 # Vault Helm Chart Makefile
-# Fork: MisterGrinvalds/hashicorp.vault-helm
+# Fork: lfblooms/hashicorp.vault-helm
 # Upstream: hashicorp/vault-helm
 
 VAULT_CHART_PATH := forks/vault-helm
@@ -87,3 +87,27 @@ vault-seal-status: ## Check Vault seal status
 vault-sync: ## Sync fork with upstream
 	@echo "$(GREEN)Syncing Vault fork with upstream...$(NC)"
 	@cd forks/vault-helm && git fetch upstream && git merge upstream/main --no-edit
+
+# =============================================================================
+# OCI PACKAGING & PUBLISHING
+# =============================================================================
+
+.PHONY: vault-package
+vault-package: ## Package Vault chart
+	@$(PUSH_CHART) --chart $(VAULT_CHART_PATH) --package-only
+
+.PHONY: vault-push
+vault-push: ## Push Vault chart to OCI registry (REGISTRY=local)
+	@$(PUSH_CHART) --chart $(VAULT_CHART_PATH) --registry $(REGISTRY)
+
+# =============================================================================
+# MIRRORING (UPSTREAM → OCI REGISTRY)
+# =============================================================================
+
+.PHONY: vault-mirror
+vault-mirror: ## Mirror Vault chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
+	@$(MIRROR_CHART) --chart vault $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+
+.PHONY: vault-images
+vault-images: ## List container images in Vault chart
+	@$(EXTRACT_IMAGES) $(VAULT_CHART_PATH)

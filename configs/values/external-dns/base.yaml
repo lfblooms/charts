@@ -1,5 +1,5 @@
 # external-dns Base Values
-# Fork: MisterGrinvalds/kubernetes-sigs.external-dns
+# Fork: lfblooms/kubernetes-sigs.external-dns
 # Chart: charts/external-dns
 
 # Provider configuration (override per context)
