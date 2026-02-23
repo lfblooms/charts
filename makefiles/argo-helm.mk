@@ -96,9 +96,9 @@ argocd-push: ## Push ArgoCD chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: argocd-mirror
-argocd-mirror: ## Mirror ArgoCD chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart argo-cd $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+argocd-mirror: ## Mirror ArgoCD chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart argo-cd $(if $(VERSION),--version $(VERSION))
 
 .PHONY: argocd-images
 argocd-images: ## List container images in ArgoCD chart
-	@$(EXTRACT_IMAGES) $(ARGOCD_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart argo-cd --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

@@ -1,21 +1,25 @@
 # OCI Registry Configuration
-# Used by scripts/push-chart.sh to resolve registry targets.
+# Used by scripts/push-chart.sh and scripts/mirror-chart.sh to resolve registry targets.
 #
 # Each entry defines:
-#   url:        Registry host (no oci:// prefix)
-#   plain-http: Use --plain-http flag for helm push (required for non-TLS registries)
+#   url:           Registry host (no oci:// prefix)
+#   plain-http:    Use --plain-http flag for helm push (required for non-TLS registries)
+#   charts-prefix: Path prefix for chart artifacts (e.g., "charts" → url/charts/<chart-name>)
 #
 # Usage:
 #   make <chart>-push REGISTRY=local
 #   make push-all REGISTRY=ghcr
 
 registries:
-  local:
-    url: localhost:5000
-    plain-http: true
+  # local:
+  #   url: localhost:5000
+  #   plain-http: true
+  #   charts-prefix: charts
   docr:
     url: registry.digitalocean.com/greenforests
     plain-http: false
+    charts-prefix: charts
   # ghcr:
   #   url: ghcr.io/lfblooms
   #   plain-http: false
+  #   charts-prefix: charts

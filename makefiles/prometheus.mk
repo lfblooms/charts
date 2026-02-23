@@ -162,17 +162,17 @@ kube-prometheus-stack-push: ## Push kube-prometheus-stack chart to OCI registry 
 # =============================================================================
 
 .PHONY: prometheus-mirror
-prometheus-mirror: ## Mirror Prometheus chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart prometheus $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+prometheus-mirror: ## Mirror Prometheus chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart prometheus $(if $(VERSION),--version $(VERSION))
 
 .PHONY: prometheus-images
 prometheus-images: ## List container images in Prometheus chart
-	@$(EXTRACT_IMAGES) $(PROMETHEUS_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart prometheus --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: kube-prometheus-stack-mirror
-kube-prometheus-stack-mirror: ## Mirror kube-prometheus-stack chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart kube-prometheus-stack $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+kube-prometheus-stack-mirror: ## Mirror kube-prometheus-stack chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart kube-prometheus-stack $(if $(VERSION),--version $(VERSION))
 
 .PHONY: kube-prometheus-stack-images
 kube-prometheus-stack-images: ## List container images in kube-prometheus-stack chart
-	@$(EXTRACT_IMAGES) $(KUBEPROMSTACK_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart kube-prometheus-stack --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

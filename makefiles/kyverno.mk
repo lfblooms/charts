@@ -123,17 +123,9 @@ kyverno-policies-push: ## Push Kyverno policies chart to OCI registry (REGISTRY=
 # =============================================================================
 
 .PHONY: kyverno-mirror
-kyverno-mirror: ## Mirror Kyverno chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart kyverno $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+kyverno-mirror: ## Mirror Kyverno chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart kyverno $(if $(VERSION),--version $(VERSION))
 
 .PHONY: kyverno-images
 kyverno-images: ## List container images in Kyverno chart
-	@$(EXTRACT_IMAGES) $(KYVERNO_CHART_PATH)
-
-.PHONY: kyverno-policies-mirror
-kyverno-policies-mirror: ## Mirror Kyverno policies chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart kyverno-policies $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
-
-.PHONY: kyverno-policies-images
-kyverno-policies-images: ## List container images in Kyverno policies chart
-	@$(EXTRACT_IMAGES) $(KYVERNO_POLICIES_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart kyverno --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

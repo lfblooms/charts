@@ -91,9 +91,9 @@ cert-manager-push: ## Push cert-manager chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: cert-manager-mirror
-cert-manager-mirror: ## Mirror cert-manager chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart cert-manager $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+cert-manager-mirror: ## Mirror cert-manager chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart cert-manager $(if $(VERSION),--version $(VERSION))
 
 .PHONY: cert-manager-images
 cert-manager-images: ## List container images in cert-manager chart
-	@$(EXTRACT_IMAGES) $(CERTMANAGER_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart cert-manager --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

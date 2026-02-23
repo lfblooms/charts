@@ -86,9 +86,9 @@ external-dns-push: ## Push external-dns chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: external-dns-mirror
-external-dns-mirror: ## Mirror external-dns chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart external-dns $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+external-dns-mirror: ## Mirror external-dns chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart external-dns $(if $(VERSION),--version $(VERSION))
 
 .PHONY: external-dns-images
 external-dns-images: ## List container images in external-dns chart
-	@$(EXTRACT_IMAGES) $(EXTERNALDNS_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart external-dns --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

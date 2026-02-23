@@ -163,17 +163,17 @@ infisical-push: ## Push infisical chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: infisical-mirror
-infisical-mirror: ## Mirror Infisical chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart infisical $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+infisical-mirror: ## Mirror Infisical chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart infisical $(if $(VERSION),--version $(VERSION))
 
 .PHONY: infisical-images
 infisical-images: ## List container images in Infisical chart
-	@$(EXTRACT_IMAGES) $(INFISICAL_CHART)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart infisical --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'
 
 .PHONY: infisical-gateway-mirror
-infisical-gateway-mirror: ## Mirror Infisical Gateway chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart infisical-gateway $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+infisical-gateway-mirror: ## Mirror Infisical Gateway chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart infisical-gateway $(if $(VERSION),--version $(VERSION))
 
 .PHONY: infisical-gateway-images
 infisical-gateway-images: ## List container images in Infisical Gateway chart
-	@$(EXTRACT_IMAGES) forks/infisical/helm-charts/infisical-gateway
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart infisical-gateway --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

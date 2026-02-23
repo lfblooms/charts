@@ -105,9 +105,9 @@ vault-push: ## Push Vault chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: vault-mirror
-vault-mirror: ## Mirror Vault chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart vault $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+vault-mirror: ## Mirror Vault chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart vault $(if $(VERSION),--version $(VERSION))
 
 .PHONY: vault-images
 vault-images: ## List container images in Vault chart
-	@$(EXTRACT_IMAGES) $(VAULT_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart vault --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

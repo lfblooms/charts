@@ -92,9 +92,9 @@ harbor-push: ## Push Harbor chart to OCI registry (REGISTRY=local)
 # =============================================================================
 
 .PHONY: harbor-mirror
-harbor-mirror: ## Mirror Harbor chart + images (MIRROR_REGISTRY=docr, SINCE=<ver>)
-	@$(MIRROR_CHART) --chart harbor $(if $(SINCE),--since $(SINCE)) --registry $(MIRROR_REGISTRY)
+harbor-mirror: ## Mirror Harbor chart + images to DOCR (VERSION=<ver>)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart harbor $(if $(VERSION),--version $(VERSION))
 
 .PHONY: harbor-images
 harbor-images: ## List container images in Harbor chart
-	@$(EXTRACT_IMAGES) $(HARBOR_CHART_PATH)
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --chart harbor --dry-run --images-only -o json | jq -r '.charts[].versions[].images[].source'

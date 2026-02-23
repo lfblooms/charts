@@ -27,12 +27,9 @@ REGISTRY ?= local
 # Push script
 PUSH_CHART := ./scripts/push-chart.sh
 
-# Mirror scripts
-MIRROR_CHART := ./scripts/mirror-chart.sh
-EXTRACT_IMAGES := ./scripts/extract-images.sh
-
-# Default mirror registry
-MIRROR_REGISTRY ?= docr
+# Mirror tool (lazyoci mirror replaces mirror-chart.sh + extract-images.sh)
+LAZYOCI := lazyoci
+MIRROR_CONFIG := registry/mirror.yaml
 
 # =============================================================================
 # HELP
@@ -56,8 +53,8 @@ help: ## Show this help
 	@echo "$(YELLOW)Secrets Management:$(NC)"
 	@grep -hE '^(external-secrets|vault|infisical)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "$(YELLOW)Networking:$(NC)"
-	@grep -hE '^(ingress-nginx|istio|external-dns)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@echo "$(YELLOW)Networking & CNI:$(NC)"
+	@grep -hE '^(cilium|ingress-nginx|istio|external-dns)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$(YELLOW)Observability:$(NC)"
 	@grep -hE '^(grafana|loki|tempo|mimir|prometheus|kube-prometheus-stack)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
@@ -89,7 +86,7 @@ help: ## Show this help
 	@echo "$(YELLOW)Mirroring (Upstream → DOCR):$(NC)"
 	@grep -hE '^mirror-all[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
-	@echo "  Per-chart: make <chart>-mirror [SINCE=<ver>] [MIRROR_REGISTRY=<name>]"
+	@echo "  Per-chart: make <chart>-mirror [VERSION=<ver>]"
 	@echo "  Per-chart: make <chart>-images  (list container images)"
 	@echo ""
 	@echo "Run 'make help-<chart>' for detailed targets (e.g., make help-argocd)"
@@ -206,6 +203,7 @@ PACKAGE_ALL_TARGETS := \
 	tailscale-package \
 	argocd-package \
 	cert-manager-package \
+	cilium-package \
 	external-dns-package \
 	external-secrets-package \
 	grafana-package loki-package tempo-package mimir-package \
@@ -236,25 +234,9 @@ push-all: $(PUSH_ALL_TARGETS) ## Push all charts to OCI registry (REGISTRY=local
 # BULK MIRRORING (UPSTREAM → OCI REGISTRY)
 # =============================================================================
 
-# All mirror targets (defined in individual makefiles)
-MIRROR_ALL_TARGETS := \
-	argocd-mirror \
-	cert-manager-mirror \
-	external-secrets-mirror \
-	vault-mirror vault-secrets-operator-mirror \
-	ingress-nginx-mirror external-dns-mirror tailscale-mirror \
-	istio-base-mirror istiod-mirror istio-cni-mirror istio-ingress-mirror \
-	grafana-mirror loki-mirror tempo-mirror mimir-mirror \
-	kube-prometheus-stack-mirror prometheus-mirror \
-	kyverno-mirror kyverno-policies-mirror \
-	policy-reporter-mirror kiali-mirror \
-	harbor-mirror minio-mirror \
-	keycloak-mirror \
-	nextcloud-mirror reloader-mirror \
-	infisical-mirror infisical-gateway-mirror
-
 .PHONY: mirror-all
-mirror-all: $(MIRROR_ALL_TARGETS) ## Mirror all charts + images to registry (MIRROR_REGISTRY=docr)
+mirror-all: ## Mirror all charts + images to DOCR
+	@$(LAZYOCI) mirror --config $(MIRROR_CONFIG) --all
 
 # =============================================================================
 # INCLUDE CHART-SPECIFIC MAKEFILES

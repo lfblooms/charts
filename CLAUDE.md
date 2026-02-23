@@ -25,17 +25,14 @@ charts/                              # github.com/lfblooms/charts
 │           ├── base.yaml            # Shared values across all contexts
 │           └── <context>.yaml       # Context-specific overrides
 ├── registry/
-│   ├── registries.yaml              # OCI registry definitions (local, docr)
-│   ├── upstreams.yaml               # Upstream chart sources for mirroring
-│   └── mirror-since.yaml            # Per-chart version thresholds for mirroring
+│   ├── registries.yaml              # OCI registry definitions (used by push-chart.sh)
+│   └── mirror.yaml                  # Mirror config: upstreams, versions, target (used by lazyoci mirror)
 ├── docker-compose.yaml              # Local CNCF Distribution registry
 ├── makefiles/                       # Chart-specific makefiles
 │   └── <repo>.mk                    # e.g., infisical.mk
 ├── skills/                          # Domain knowledge references
 └── scripts/
     ├── push-chart.sh                # Package + push chart to OCI registry
-    ├── mirror-chart.sh              # Mirror upstream chart versions + images to OCI registry
-    ├── extract-images.sh            # Extract container image refs from a Helm chart
     ├── sync-upstream.sh             # Sync fork with upstream
     └── validate-values.sh           # Validate chart values
 ```
@@ -94,12 +91,11 @@ make infisical-push          # Package + push to registry (REGISTRY=local)
 make push-all REGISTRY=local # Push all charts to a registry
 make package-all             # Package all charts
 
-# Mirroring (Upstream → DOCR)
-make nextcloud-mirror                          # Mirror using version from mirror-since.yaml
-make nextcloud-mirror SINCE=6.5.0              # Override since threshold
-make vault-mirror MIRROR_REGISTRY=docr         # Explicit registry
+# Mirroring (Upstream → DOCR, powered by lazyoci mirror)
+make vault-mirror                              # Mirror versions from registry/mirror.yaml
+make vault-mirror VERSION=0.28.0               # Override with specific version
 make mirror-all                                # Mirror all charts to DOCR
-make nextcloud-images                          # List container images in chart
+make vault-images                              # List container images in chart
 ```
 
 ## Workflows
@@ -143,22 +139,23 @@ registries:
   local:
     url: localhost:5000
     plain-http: true
+    charts-prefix: charts
   docr:
     url: registry.digitalocean.com/greenforests
     plain-http: false
+    charts-prefix: charts
 ```
 
 ### Mirroring Upstream Charts + Images to DOCR
 
-The mirroring system pulls chart versions from upstream sources and copies both
-chart OCI artifacts and container images to a target registry.
+The mirroring system uses `lazyoci mirror` to pull chart versions from upstream
+sources and copy both chart OCI artifacts and container images to a target
+registry (DOCR).
 
-**Configuration files:**
-- `registry/upstreams.yaml` — maps each chart to its upstream source (traditional Helm repo, OCI registry, or local fork)
-- `registry/mirror-since.yaml` — per-chart minimum version to mirror
-- `registry/registries.yaml` — target registry definitions
+**Configuration:** `registry/mirror.yaml` — unified config defining upstream
+chart sources (with source types and version lists) and the target registry.
 
-**Source types in upstreams.yaml:**
+**Source types:**
 - `repo` — traditional Helm repository (e.g., `https://charts.jetstack.io`)
 - `oci` — OCI registry (e.g., `oci://registry-1.docker.io/bitnamicharts`)
 - `local` — built from fork source (e.g., `forks/infisical/helm-charts/...`)
@@ -168,26 +165,32 @@ chart OCI artifacts and container images to a target registry.
 # Authenticate to DOCR (valid 30 days)
 doctl registry login
 
-# Mirror a single chart (reads --since from mirror-since.yaml)
-make nextcloud-mirror
+# Mirror a single chart (reads versions from registry/mirror.yaml)
+make vault-mirror
 
-# Override since threshold
-make nextcloud-mirror SINCE=6.5.0
+# Override with specific version
+make vault-mirror VERSION=0.28.0
+
+# Mirror multiple specific versions
+lazyoci mirror --config registry/mirror.yaml --chart vault --version 0.28.0 --version 0.29.0
 
 # Dry run (preview what would be mirrored)
-./scripts/mirror-chart.sh --chart nextcloud --registry docr --dry-run
+lazyoci mirror --config registry/mirror.yaml --chart vault --dry-run
 
 # Mirror charts only (no images)
-./scripts/mirror-chart.sh --chart vault --registry docr --charts-only
+lazyoci mirror --config registry/mirror.yaml --chart vault --charts-only
 
 # Mirror images only (no chart push)
-./scripts/mirror-chart.sh --chart vault --since 0.28.0 --registry docr --images-only
+lazyoci mirror --config registry/mirror.yaml --chart vault --images-only
 
-# Mirror all charts defined in mirror-since.yaml
+# Mirror all charts defined in mirror.yaml
 make mirror-all
 
 # List images in a chart
-make nextcloud-images
+make vault-images
+
+# JSON output for scripting
+lazyoci mirror --config registry/mirror.yaml --all -o json
 ```
 
 **Image path mapping:**
@@ -197,14 +200,14 @@ the remaining path is preserved under the target registry:
 ghcr.io/stakater/reloader:v1.2.1
   → registry.digitalocean.com/greenforests/stakater/reloader:v1.2.1
 
-docker.io/library/nextcloud:30.0.6-apache
-  → registry.digitalocean.com/greenforests/library/nextcloud:30.0.6-apache
+docker.io/library/busybox:1.28
+  → registry.digitalocean.com/greenforests/library/busybox:1.28
 ```
 
 **Skip-if-exists:** Both chart and image pushes check if the artifact already
 exists in the target registry before pushing. Safe to run repeatedly.
 
-**Dependencies:** `helm`, `yq`, `crane` (for image copy), `oras` (for existence checks)
+**Dependencies:** `helm`, `lazyoci`, `jq`
 
 ### Managing Configurations
 
