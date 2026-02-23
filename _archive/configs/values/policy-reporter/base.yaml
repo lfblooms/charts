@@ -1,0 +1,31 @@
+# Policy Reporter Base Values
+# Fork: lfblooms/kyverno.policy-reporter
+# Chart: charts/policy-reporter
+
+# UI configuration
+ui:
+  enabled: true
+
+# Kyverno plugin
+kyvernoPlugin:
+  enabled: true
+
+# Resources
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# Target configuration (send reports to)
+target:
+  # Prometheus metrics
+  metrics:
+    enabled: true
+
+  # Loki (optional)
+  loki:
+    host: ""
+    minimumPriority: warning

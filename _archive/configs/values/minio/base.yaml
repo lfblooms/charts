@@ -1,0 +1,34 @@
+# MinIO Base Values
+# Fork: lfblooms/minio.minio
+# Chart: helm/minio
+
+# Mode: standalone or distributed
+mode: standalone
+
+# Root credentials (use secrets in production)
+# rootUser: admin
+# rootPassword: set via secret
+
+# Resources
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+# Persistence
+persistence:
+  enabled: true
+  size: 10Gi
+
+# Console configuration
+consoleService:
+  type: ClusterIP
+  port: 9001
+
+# API service
+service:
+  type: ClusterIP
+  port: 9000

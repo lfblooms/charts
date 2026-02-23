@@ -1,0 +1,18 @@
+# Istio CNI Base Values
+# Fork: lfblooms/istio.istio
+# Chart: manifests/charts/istio-cni
+
+# CNI configuration
+cni:
+  # CNI bin and conf directories
+  cniBinDir: /opt/cni/bin
+  cniConfDir: /etc/cni/net.d
+
+  # Resources
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

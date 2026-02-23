@@ -1,0 +1,58 @@
+# Tailscale Operator Base Values
+# Shared configuration across all contexts
+# Layer context-specific values on top: helm install ... -f base.yaml -f <context>.yaml
+
+# OAuth credentials - use existing secret created by `make tailscale-secrets`
+# Do not set oauth.clientId/clientSecret here - use environment variables with make target
+oauth: {}
+
+# Install Tailscale CRDs
+installCRDs: true
+
+# Operator configuration
+operatorConfig:
+  defaultTags:
+    - "tag:k8s-operator"
+
+  image:
+    repository: tailscale/k8s-operator
+    pullPolicy: Always
+
+  logging: "info"
+  hostname: "tailscale-operator"
+
+  nodeSelector:
+    kubernetes.io/os: linux
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+  podSecurityContext:
+    runAsNonRoot: true
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+# Ingress class for Tailscale ingress
+ingressClass:
+  name: "tailscale"
+  enabled: true
+
+# Proxy configuration for ingress/egress proxies
+proxyConfig:
+  image:
+    repository: tailscale/tailscale
+  defaultTags: "tag:k8s"
+  firewallMode: auto
+
+# API server proxy - disabled by default
+apiServerProxyConfig:
+  mode: "false"
+  allowImpersonation: "false"

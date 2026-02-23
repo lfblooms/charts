@@ -1,0 +1,43 @@
+# Infisical Local Development Values
+# Minimal resources for KIND cluster testing
+
+replicaCount: 1
+
+resources:
+  limits:
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+# Faster startup for local testing
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 15
+
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+# Smaller storage for local
+postgresql:
+  primary:
+    persistence:
+      size: 1Gi
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+redis:
+  master:
+    persistence:
+      size: 512Mi
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi

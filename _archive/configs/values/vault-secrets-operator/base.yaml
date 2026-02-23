@@ -1,0 +1,24 @@
+# Vault Secrets Operator Base Values
+# Fork: lfblooms/hashicorp.vault-secrets-operator
+# Chart: chart
+
+# Default Vault connection (override per context)
+defaultVaultConnection:
+  enabled: false
+  address: http://vault.vault:8200
+  skipTLSVerify: false
+
+# Controller configuration
+controller:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# Metrics
+metricsService:
+  enabled: true

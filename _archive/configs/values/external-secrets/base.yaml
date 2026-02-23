@@ -1,0 +1,23 @@
+# external-secrets Base Values
+# Fork: lfblooms/external-secrets.external-secrets
+# Chart: deploy/charts/external-secrets
+
+# Install CRDs
+installCRDs: true
+
+# Webhook configuration
+webhook:
+  create: true
+
+# Cert controller
+certController:
+  create: true
+
+# Resources
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
