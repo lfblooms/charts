@@ -152,13 +152,13 @@ upstreams:
     type: repo
     repo: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
-    versions: ["82.2.0"]
+    versions: ["82.2.0", "81.6.9"]
 
   prometheus:
     type: repo
     repo: https://prometheus-community.github.io/helm-charts
     chart: prometheus
-    versions: ["25.28.0"]
+    versions: ["25.28.0", "25.30.2"]
 
   # ============================================================================
   # SECURITY & POLICY
