@@ -122,25 +122,25 @@ upstreams:
     type: repo
     repo: https://grafana.github.io/helm-charts
     chart: grafana
-    versions: ["10.5.15"]
+    versions: ["10.5.15", "8.10.4"]
 
   loki:
     type: repo
     repo: https://grafana.github.io/helm-charts
     chart: loki
-    versions: ["6.53.0"]
+    versions: ["6.53.0", "6.46.0"]
 
   tempo:
     type: repo
     repo: https://grafana.github.io/helm-charts
     chart: tempo
-    versions: ["1.24.4"]
+    versions: ["1.24.4", "1.23.3"]
 
   mimir-distributed:
     type: repo
     repo: https://grafana.github.io/helm-charts
     chart: mimir-distributed
-    versions: ["6.0.5"]
+    versions: ["6.0.5", "5.8.0"]
 
   alloy:
     type: repo
