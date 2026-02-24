@@ -1,0 +1,35 @@
+# Loki Base Values
+# Fork: lfblooms/grafana.loki
+# Chart: production/helm/loki
+
+# Deploy in single-binary mode for dev/small clusters
+# Override per context for microservices mode
+deploymentMode: SingleBinary
+
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: filesystem
+
+singleBinary:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  persistence:
+    enabled: true
+    size: 10Gi
+
+# Disable components not needed in single-binary mode
+read:
+  replicas: 0
+write:
+  replicas: 0
+backend:
+  replicas: 0

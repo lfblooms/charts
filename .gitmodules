@@ -16,9 +16,6 @@
 [submodule "forks/external-secrets"]
 	path = forks/external-secrets
 	url = https://github.com/lfblooms/external-secrets.external-secrets.git
-[submodule "forks/grafana-helm-charts"]
-	path = forks/grafana-helm-charts
-	url = https://github.com/lfblooms/grafana.helm-charts.git
 [submodule "forks/ingress-nginx"]
 	path = forks/ingress-nginx
 	url = https://github.com/lfblooms/kubernetes.ingress-nginx.git
@@ -61,3 +58,15 @@
 [submodule "forks/cilium"]
 	path = forks/cilium
 	url = https://github.com/lfblooms/cilium.cilium.git
+[submodule "forks/alloy"]
+	path = forks/alloy
+	url = https://github.com/lfblooms/grafana.alloy.git
+[submodule "forks/loki"]
+	path = forks/loki
+	url = https://github.com/lfblooms/grafana.loki.git
+[submodule "forks/mimir"]
+	path = forks/mimir
+	url = https://github.com/lfblooms/grafana.mimir.git
+[submodule "forks/grafana-community-helm-charts"]
+	path = forks/grafana-community-helm-charts
+	url = https://github.com/lfblooms/grafana-community.helm-charts.git

@@ -1,0 +1,51 @@
+# Nextcloud Base Values
+# Fork: lfblooms/nextcloud.helm
+# Chart: charts/nextcloud
+
+image:
+  repository: nextcloud
+  flavor: apache
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 4G
+
+nextcloud:
+  host: nextcloud.local
+
+persistence:
+  enabled: true
+  size: 10Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+internalDatabase:
+  enabled: false
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        database: nextcloud
+        username: nextcloud
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  architecture: standalone

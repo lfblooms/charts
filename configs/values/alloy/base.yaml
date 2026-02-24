@@ -1,0 +1,28 @@
+# Grafana Alloy Base Values
+# Fork: lfblooms/grafana.alloy
+# Chart: operations/helm/charts/alloy
+
+# CRDs
+crds:
+  create: true
+
+# Alloy configuration
+alloy:
+  clustering:
+    enabled: false
+
+  stabilityLevel: "generally-available"
+
+  # Alloy config — override per context
+  configMap:
+    create: true
+    content: ""
+
+# Resources
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

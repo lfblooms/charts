@@ -1,0 +1,21 @@
+# Tempo Base Values
+# Fork: lfblooms/grafana-community.helm-charts
+# Chart: charts/tempo
+
+tempo:
+  repository: grafana/tempo
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+persistence:
+  enabled: true
+  size: 10Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi

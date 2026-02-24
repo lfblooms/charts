@@ -57,7 +57,7 @@ help: ## Show this help
 	@grep -hE '^(cilium|ingress-nginx|istio|external-dns)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$(YELLOW)Observability:$(NC)"
-	@grep -hE '^(grafana|loki|tempo|mimir|prometheus|kube-prometheus-stack)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@grep -hE '^(grafana|loki|tempo|mimir|alloy|prometheus|kube-prometheus-stack)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$(YELLOW)Security & Policy:$(NC)"
 	@grep -hE '^(cert-manager|kyverno|policy-reporter|kiali)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | grep -E '(install|status)' | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
@@ -104,9 +104,9 @@ help-istio: ## Show Istio targets
 	@grep -hE '^(istio|istiod)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 
 .PHONY: help-observability
-help-observability: ## Show observability targets (Grafana, Loki, Tempo, Mimir, Prometheus)
+help-observability: ## Show observability targets (Alloy, Grafana, Loki, Tempo, Mimir, Prometheus)
 	@echo "$(YELLOW)Observability Targets:$(NC)"
-	@grep -hE '^(grafana|loki|tempo|mimir|prometheus|kube-prometheus-stack|observability)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
+	@grep -hE '^(alloy|grafana|loki|tempo|mimir|prometheus|kube-prometheus-stack|observability)[a-zA-Z_-]*:.*?## .*$$' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | awk 'BEGIN {FS = "\t"}; {printf "  $(GREEN)%-30s$(NC) %s\n", $$1, $$2}'
 
 .PHONY: help-vault
 help-vault: ## Show Vault targets
@@ -219,7 +219,8 @@ PACKAGE_ALL_TARGETS := \
 	vault-package \
 	vault-secrets-operator-package \
 	nextcloud-package \
-	reloader-package
+	reloader-package \
+	alloy-package
 
 # All push targets
 PUSH_ALL_TARGETS := $(PACKAGE_ALL_TARGETS:%-package=%-push)

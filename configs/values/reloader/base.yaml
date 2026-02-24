@@ -1,0 +1,19 @@
+# Reloader Base Values
+# Fork: lfblooms/stakater.Reloader
+# Chart: deployments/kubernetes/chart/reloader
+
+reloader:
+  watchGlobally: true
+  reloadStrategy: default
+  logLevel: info
+
+  deployment:
+    replicas: 1
+    revisionHistoryLimit: 2
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi

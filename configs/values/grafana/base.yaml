@@ -1,0 +1,24 @@
+# Grafana Base Values
+# Fork: lfblooms/grafana-community.helm-charts
+# Chart: charts/grafana
+
+rbac:
+  create: true
+
+persistence:
+  enabled: true
+  size: 5Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Datasources — override per context
+datasources: {}
+
+# Dashboard providers — override per context
+dashboardProviders: {}

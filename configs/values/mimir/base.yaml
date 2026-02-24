@@ -1,0 +1,29 @@
+# Mimir Base Values
+# Fork: lfblooms/grafana.mimir
+# Chart: operations/helm/charts/mimir-distributed
+
+# Single-binary mode for dev/small clusters
+# Override per context for microservices mode
+deploymentMode: SingleBinary
+
+mimir:
+  structuredConfig:
+    common:
+      storage:
+        backend: filesystem
+
+minio:
+  enabled: false
+
+singleBinary:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  persistentVolume:
+    enabled: true
+    size: 10Gi

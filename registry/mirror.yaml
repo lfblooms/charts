@@ -122,13 +122,13 @@ upstreams:
     type: repo
     repo: https://grafana.github.io/helm-charts
     chart: grafana
-    versions: ["8.5.11"]
+    versions: ["10.5.15"]
 
   loki:
     type: repo
     repo: https://grafana.github.io/helm-charts
     chart: loki
-    versions: ["2.16.0"]
+    versions: ["6.53.0"]
 
   tempo:
     type: repo
@@ -141,6 +141,12 @@ upstreams:
     repo: https://grafana.github.io/helm-charts
     chart: mimir-distributed
     versions: ["6.0.5"]
+
+  alloy:
+    type: repo
+    repo: https://grafana.github.io/helm-charts
+    chart: alloy
+    versions: ["1.5.3"]
 
   kube-prometheus-stack:
     type: repo
@@ -199,6 +205,12 @@ upstreams:
   # ============================================================================
   # APPLICATION PLATFORMS
   # ============================================================================
+
+  nextcloud:
+    type: repo
+    repo: https://nextcloud.github.io/helm/
+    chart: nextcloud
+    versions: ["8.9.1"]
 
   reloader:
     type: repo
